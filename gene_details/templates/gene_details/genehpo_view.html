@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Human Phenotype Ontology for {{gene}}</h1>
+    <table>
+        <thead>
+            <tr>
+                <th scope = "col">HPO name</th>
+                <th scope = "col">HPO definition</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in hpo %}
+            <tr>
+                <td>{{entry.definition}}</td>
+                <td>{{entry.name}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+
+    <h1>{{ page.title }}</h1>
+
+    <div class="intro">{{ page.intro|richtext }}</div>
+
+    <table>
+        <thead>
+            <tr>
+                <th scope = "col">ID</th>
+                <th scope = "col">Variant dbSNP or HGVS ID</th>
+                <th scope = "col">Reference genome</th>
+                <th scope = "col">Transcript ID</th>
+                <th scope = "col">Chromosome</th>
+                <th scope = "col">Genomic start position</th>
+                <th scope = "col">Genomic end position</th>
+                <th scope = "col">Reference allele</th>
+                <th scope = "col">Alternate allele</th>
+                <th scope = "col">Disease association with reference allele</th>
+                <th scope = "col">Variant type</th>
+                <th scope = "col">Gene</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for variant in variants %}
+            <tr>
+                <td>{{ variant.id }}</td>
+                <td><a href="/vep/{{variant.variant_name}}/">{{ variant.variant_name }}</a></td>
+                <td>{{ variant.reference_genome }}</td>
+                <td>{{ variant.transcript_id }}</td>
+                <td>{{ variant.chromosome }}</td>
+                <td>{{ variant.genomic_start_position }}</td>
+                <td>{{ variant.genomic_end_position }}</td>
+                <td>{{ variant.reference_allele }}</td>
+                <td>{{ variant.alternate_allele }}</td>
+                <td>{{ variant.disease_association_with_ref_allele }}</td>
+                <td>{{ variant.variant_type }}</td>
+                <td>{{ variant.gene }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content %}

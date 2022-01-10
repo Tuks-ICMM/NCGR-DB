@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+
+    <h1>{{ page.title }}</h1>
+
+    <div class="intro">{{ page.intro|richtext }}</div>
+
+    <table>
+        <thead>
+            <tr>
+                <th scope = "col">Study Id</th>
+                <th scope = "col">DOI</th>
+                <th scope = "col">Paper</th>
+                <th scope = "col">Population description</th>
+                <th scope = "col">UNICEF regional classification</th>
+                <th scope = "col">Methods</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for study in studies %}
+            <tr>
+                <td>{{ study.id }}</td>
+                <td>{{ study.doi }}</td>
+                <td>{{ study.papers }}</td>
+                <td>{{ study.study_population_description }}</td>
+                <td>{{ study.unicef_regional_classification }}</td>
+                <td>{{ study.methods }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content %}
