@@ -6,72 +6,344 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('variant_details', '0001_initial'),
+        ("variant_details", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='EnsemblVep',
+            name="EnsemblVep",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('variant_name', models.TextField(db_column='Variant_name')),
-                ('ensembl_canonical_hgvsc', models.TextField(blank=True, db_column='Ensembl canonical HGVSC', null=True)),
-                ('consequence_terms', models.TextField(blank=True, db_column='Consequence_terms', null=True)),
-                ('af_1000gp3_eur', models.DecimalField(blank=True, db_column='AF_1000gp3_EUR', decimal_places=9, max_digits=10, null=True)),
-                ('af_1000gp3', models.DecimalField(blank=True, db_column='AF_1000gp3', decimal_places=9, max_digits=10, null=True)),
-                ('af_1000gp3_afr', models.DecimalField(blank=True, db_column='AF_1000gp3_afr', decimal_places=9, max_digits=10, null=True)),
-                ('af_1000gp3_amr', models.DecimalField(blank=True, db_column='AF_1000gp3_amr', decimal_places=9, max_digits=10, null=True)),
-                ('af_1000gp3_sas', models.DecimalField(blank=True, db_column='AF_1000gp3_SAS', decimal_places=9, max_digits=10, null=True)),
-                ('af_1000gp3_eas', models.DecimalField(blank=True, db_column='AF_1000gp3_EAS', decimal_places=9, max_digits=10, null=True)),
-                ('exac_adj_af', models.DecimalField(blank=True, db_column='Exac_ADJ_AF', decimal_places=9, max_digits=10, null=True)),
-                ('exac_afr_af', models.DecimalField(blank=True, db_column='Exac_AFR_AF', decimal_places=9, max_digits=10, null=True)),
-                ('exac_amr_af', models.DecimalField(blank=True, db_column='Exac_AMR_AF', decimal_places=9, max_digits=10, null=True)),
-                ('exac_eas_af', models.DecimalField(blank=True, db_column='Exac_EAS_AF', decimal_places=9, max_digits=10, null=True)),
-                ('exac_nfe_af', models.DecimalField(blank=True, db_column='Exac_NFE_AF', decimal_places=9, max_digits=10, null=True)),
-                ('exac_sas_af', models.DecimalField(blank=True, db_column='Exac_SAS_AF', decimal_places=9, max_digits=10, null=True)),
-                ('gnomad_genomes_af', models.DecimalField(blank=True, db_column='GnomAD_genomes_af', decimal_places=9, max_digits=10, null=True)),
-                ('gnomad_genomes_afr_af', models.DecimalField(blank=True, db_column='GnomAD_genomes_afr_af', decimal_places=9, max_digits=10, null=True)),
-                ('gnomad_genomes_eas_af', models.DecimalField(blank=True, db_column='GnomAD_genomes_eas_af', decimal_places=9, max_digits=10, null=True)),
-                ('study_acmg', models.TextField(blank=True, db_column='Study_ACMG', null=True)),
-                ('polyphen2_hvar_score', models.TextField(blank=True, db_column='Polyphen2_hvar_score', null=True)),
-                ('polyphen2_hvar_pred', models.TextField(blank=True, db_column='Polyphen2_hvar_pred', null=True)),
-                ('sift4g_score', models.TextField(blank=True, db_column='Sift4G_score', null=True)),
-                ('sift4g_pred', models.TextField(blank=True, db_column='Sift4G_pred', null=True)),
-                ('fathmm_score', models.TextField(blank=True, db_column='Fathmm_score', null=True)),
-                ('fathmm_pred', models.TextField(blank=True, db_column='Fathmm_pred', null=True)),
-                ('sift_score', models.DecimalField(blank=True, db_column='Sift_score', decimal_places=2, max_digits=3, null=True)),
-                ('sift_prediction', models.TextField(blank=True, db_column='Sift_prediction', null=True)),
-                ('cadd_raw', models.DecimalField(blank=True, db_column='CADD_raw', decimal_places=6, max_digits=7, null=True)),
-                ('cadd_phred', models.DecimalField(blank=True, db_column='CADD_phred', decimal_places=3, max_digits=5, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("variant_name", models.TextField(db_column="Variant_name")),
+                (
+                    "ensembl_canonical_hgvsc",
+                    models.TextField(
+                        blank=True, db_column="Ensembl canonical HGVSC", null=True
+                    ),
+                ),
+                (
+                    "consequence_terms",
+                    models.TextField(
+                        blank=True, db_column="Consequence_terms", null=True
+                    ),
+                ),
+                (
+                    "af_1000gp3_eur",
+                    models.DecimalField(
+                        blank=True,
+                        db_column="AF_1000gp3_EUR",
+                        decimal_places=9,
+                        max_digits=10,
+                        null=True,
+                    ),
+                ),
+                (
+                    "af_1000gp3",
+                    models.DecimalField(
+                        blank=True,
+                        db_column="AF_1000gp3",
+                        decimal_places=9,
+                        max_digits=10,
+                        null=True,
+                    ),
+                ),
+                (
+                    "af_1000gp3_afr",
+                    models.DecimalField(
+                        blank=True,
+                        db_column="AF_1000gp3_afr",
+                        decimal_places=9,
+                        max_digits=10,
+                        null=True,
+                    ),
+                ),
+                (
+                    "af_1000gp3_amr",
+                    models.DecimalField(
+                        blank=True,
+                        db_column="AF_1000gp3_amr",
+                        decimal_places=9,
+                        max_digits=10,
+                        null=True,
+                    ),
+                ),
+                (
+                    "af_1000gp3_sas",
+                    models.DecimalField(
+                        blank=True,
+                        db_column="AF_1000gp3_SAS",
+                        decimal_places=9,
+                        max_digits=10,
+                        null=True,
+                    ),
+                ),
+                (
+                    "af_1000gp3_eas",
+                    models.DecimalField(
+                        blank=True,
+                        db_column="AF_1000gp3_EAS",
+                        decimal_places=9,
+                        max_digits=10,
+                        null=True,
+                    ),
+                ),
+                (
+                    "exac_adj_af",
+                    models.DecimalField(
+                        blank=True,
+                        db_column="Exac_ADJ_AF",
+                        decimal_places=9,
+                        max_digits=10,
+                        null=True,
+                    ),
+                ),
+                (
+                    "exac_afr_af",
+                    models.DecimalField(
+                        blank=True,
+                        db_column="Exac_AFR_AF",
+                        decimal_places=9,
+                        max_digits=10,
+                        null=True,
+                    ),
+                ),
+                (
+                    "exac_amr_af",
+                    models.DecimalField(
+                        blank=True,
+                        db_column="Exac_AMR_AF",
+                        decimal_places=9,
+                        max_digits=10,
+                        null=True,
+                    ),
+                ),
+                (
+                    "exac_eas_af",
+                    models.DecimalField(
+                        blank=True,
+                        db_column="Exac_EAS_AF",
+                        decimal_places=9,
+                        max_digits=10,
+                        null=True,
+                    ),
+                ),
+                (
+                    "exac_nfe_af",
+                    models.DecimalField(
+                        blank=True,
+                        db_column="Exac_NFE_AF",
+                        decimal_places=9,
+                        max_digits=10,
+                        null=True,
+                    ),
+                ),
+                (
+                    "exac_sas_af",
+                    models.DecimalField(
+                        blank=True,
+                        db_column="Exac_SAS_AF",
+                        decimal_places=9,
+                        max_digits=10,
+                        null=True,
+                    ),
+                ),
+                (
+                    "gnomad_genomes_af",
+                    models.DecimalField(
+                        blank=True,
+                        db_column="GnomAD_genomes_af",
+                        decimal_places=9,
+                        max_digits=10,
+                        null=True,
+                    ),
+                ),
+                (
+                    "gnomad_genomes_afr_af",
+                    models.DecimalField(
+                        blank=True,
+                        db_column="GnomAD_genomes_afr_af",
+                        decimal_places=9,
+                        max_digits=10,
+                        null=True,
+                    ),
+                ),
+                (
+                    "gnomad_genomes_eas_af",
+                    models.DecimalField(
+                        blank=True,
+                        db_column="GnomAD_genomes_eas_af",
+                        decimal_places=9,
+                        max_digits=10,
+                        null=True,
+                    ),
+                ),
+                (
+                    "study_acmg",
+                    models.TextField(blank=True, db_column="Study_ACMG", null=True),
+                ),
+                (
+                    "polyphen2_hvar_score",
+                    models.TextField(
+                        blank=True, db_column="Polyphen2_hvar_score", null=True
+                    ),
+                ),
+                (
+                    "polyphen2_hvar_pred",
+                    models.TextField(
+                        blank=True, db_column="Polyphen2_hvar_pred", null=True
+                    ),
+                ),
+                (
+                    "sift4g_score",
+                    models.TextField(blank=True, db_column="Sift4G_score", null=True),
+                ),
+                (
+                    "sift4g_pred",
+                    models.TextField(blank=True, db_column="Sift4G_pred", null=True),
+                ),
+                (
+                    "fathmm_score",
+                    models.TextField(blank=True, db_column="Fathmm_score", null=True),
+                ),
+                (
+                    "fathmm_pred",
+                    models.TextField(blank=True, db_column="Fathmm_pred", null=True),
+                ),
+                (
+                    "sift_score",
+                    models.DecimalField(
+                        blank=True,
+                        db_column="Sift_score",
+                        decimal_places=2,
+                        max_digits=3,
+                        null=True,
+                    ),
+                ),
+                (
+                    "sift_prediction",
+                    models.TextField(
+                        blank=True, db_column="Sift_prediction", null=True
+                    ),
+                ),
+                (
+                    "cadd_raw",
+                    models.DecimalField(
+                        blank=True,
+                        db_column="CADD_raw",
+                        decimal_places=6,
+                        max_digits=7,
+                        null=True,
+                    ),
+                ),
+                (
+                    "cadd_phred",
+                    models.DecimalField(
+                        blank=True,
+                        db_column="CADD_phred",
+                        decimal_places=3,
+                        max_digits=5,
+                        null=True,
+                    ),
+                ),
             ],
-            options={
-                'db_table': 'ensembl_vep',
-                'managed': False,
-            },
+            options={"db_table": "ensembl_vep", "managed": False,},
         ),
         migrations.CreateModel(
-            name='MtVep',
+            name="MtVep",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('variant_name', models.TextField(db_column='Variant_name')),
-                ('reference_genome', models.TextField(blank=True, db_column='Reference_genome', null=True)),
-                ('chromosome', models.TextField(blank=True, db_column='Chromosome', null=True)),
-                ('genomic_start_position', models.IntegerField(blank=True, db_column='Genomic_start_position', null=True)),
-                ('genomic_end_position', models.IntegerField(blank=True, db_column='Genomic_end_position', null=True)),
-                ('reference_allele', models.TextField(blank=True, db_column='Reference_allele', null=True)),
-                ('alternate_allele', models.TextField(blank=True, db_column='Alternate_allele', null=True)),
-                ('query_chr', models.TextField(blank=True, db_column='Query_chr', null=True)),
-                ('query_genomic_start_pos', models.IntegerField(blank=True, db_column='Query_genomic_start_pos', null=True)),
-                ('query_ref', models.TextField(blank=True, db_column='Query_ref', null=True)),
-                ('query_alt', models.TextField(blank=True, db_column='Query_alt', null=True)),
-                ('query_transcript_stable', models.TextField(blank=True, db_column='Query_transcript_stable', null=True)),
-                ('query_ncbi_geneid', models.TextField(blank=True, db_column='Query_NCBI_geneid', null=True)),
-                ('query_prediction', models.TextField(blank=True, db_column='Query_prediction', null=True)),
-                ('query_model', models.TextField(blank=True, db_column='Query_model', null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("variant_name", models.TextField(db_column="Variant_name")),
+                (
+                    "reference_genome",
+                    models.TextField(
+                        blank=True, db_column="Reference_genome", null=True
+                    ),
+                ),
+                (
+                    "chromosome",
+                    models.TextField(blank=True, db_column="Chromosome", null=True),
+                ),
+                (
+                    "genomic_start_position",
+                    models.IntegerField(
+                        blank=True, db_column="Genomic_start_position", null=True
+                    ),
+                ),
+                (
+                    "genomic_end_position",
+                    models.IntegerField(
+                        blank=True, db_column="Genomic_end_position", null=True
+                    ),
+                ),
+                (
+                    "reference_allele",
+                    models.TextField(
+                        blank=True, db_column="Reference_allele", null=True
+                    ),
+                ),
+                (
+                    "alternate_allele",
+                    models.TextField(
+                        blank=True, db_column="Alternate_allele", null=True
+                    ),
+                ),
+                (
+                    "query_chr",
+                    models.TextField(blank=True, db_column="Query_chr", null=True),
+                ),
+                (
+                    "query_genomic_start_pos",
+                    models.IntegerField(
+                        blank=True, db_column="Query_genomic_start_pos", null=True
+                    ),
+                ),
+                (
+                    "query_ref",
+                    models.TextField(blank=True, db_column="Query_ref", null=True),
+                ),
+                (
+                    "query_alt",
+                    models.TextField(blank=True, db_column="Query_alt", null=True),
+                ),
+                (
+                    "query_transcript_stable",
+                    models.TextField(
+                        blank=True, db_column="Query_transcript_stable", null=True
+                    ),
+                ),
+                (
+                    "query_ncbi_geneid",
+                    models.TextField(
+                        blank=True, db_column="Query_NCBI_geneid", null=True
+                    ),
+                ),
+                (
+                    "query_prediction",
+                    models.TextField(
+                        blank=True, db_column="Query_prediction", null=True
+                    ),
+                ),
+                (
+                    "query_model",
+                    models.TextField(blank=True, db_column="Query_model", null=True),
+                ),
             ],
-            options={
-                'db_table': 'mt_vep',
-                'managed': False,
-            },
+            options={"db_table": "mt_vep", "managed": False,},
         ),
     ]

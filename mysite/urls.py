@@ -12,16 +12,13 @@ from variant_details import views as variant_views
 from search import views as search_views
 
 urlpatterns = [
-    path('django-admin/', admin.site.urls),
-
-    path('admin/', include(wagtailadmin_urls)),
-    path('documents/', include(wagtaildocs_urls)),
-
-    path('hpo_list/', home_views.hpo_list, name='hpo_list'),
-    path('hpo/<str:gene>/', gene_views.genehpo_view, name='genehpo_view'),
-    path('vep/<str:variant_name>/', variant_views.vep_view, name='vep_view'),
-    path('search/', search_views.search, name='search'),
-
+    path("django-admin/", admin.site.urls),
+    path("admin/", include(wagtailadmin_urls)),
+    path("documents/", include(wagtaildocs_urls)),
+    path("hpo_list/", home_views.hpo_list, name="hpo_list"),
+    path("hpo/<str:gene>/", gene_views.genehpo_view, name="genehpo_view"),
+    path("vep/<str:variant_name>/", variant_views.vep_view, name="vep_view"),
+    path("search/", search_views.search, name="search"),
 ]
 
 
@@ -38,7 +35,6 @@ urlpatterns = urlpatterns + [
     # Wagtail's page serving mechanism. This should be the last pattern in
     # the list:
     path("", include(wagtail_urls)),
-
     # Alternatively, if you want Wagtail pages to be served from a subpath
     # of your site, rather than the site root:
     #    path("pages/", include(wagtail_urls)),
