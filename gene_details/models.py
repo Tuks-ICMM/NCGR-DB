@@ -7,10 +7,10 @@ from wagtail.core.fields import RichTextField
 from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 
-from slugify import slugify
 
 # Create your models here.
 class GeneDetails(models.Model):
+
     gene = models.CharField(
         db_column="Gene", primary_key=True, max_length=150
     )  # Field name made lowercase.
@@ -31,20 +31,18 @@ class GeneDetails(models.Model):
         null=True,
     )  # Field name made lowercase.
 
+    def __str__(self):
+        return self.gene
+
     class Meta:
         managed = False
         db_table = "gene_details"
 
-    def __str__(self):
-        return self.gene
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.gene)
-        super(GeneDetails, self).save(*args, **kwargs)
-
 
 class GeneHpo(models.Model):
+
+    # template = "genehpo_view.html"
+
     inputterm = models.ForeignKey(
         GeneDetails,
         models.SET_NULL,
@@ -69,9 +67,14 @@ class GeneHpo(models.Model):
         db_column="Definition", blank=True, null=True
     )  # Field name made lowercase.
 
-    class Meta:
-        managed = False
-        db_table = "gene_hpo"
+    content_panels = Page.content_panels + [
+        FieldPanel("inputterm"),
+        FieldPanel("symbol"),
+        FieldPanel("name"),
+        FieldPanel("hpoid"),
+        FieldPanel("alternativeid"),
+        FieldPanel("definition"),
+    ]
 
     def __str__(self):
         return self.symbol
@@ -80,6 +83,10 @@ class GeneHpo(models.Model):
     def all_hpo(self):
         """Returns all hpo terms except where null"""
         return GeneHpo.objects.exclude(name__isnull=True)
+
+    class Meta:
+        managed = False
+        db_table = "gene_hpo"
 
 
 class GeneDetailsIndexPage(Page):

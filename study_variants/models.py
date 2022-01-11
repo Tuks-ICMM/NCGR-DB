@@ -45,12 +45,12 @@ class StudyVariants(models.Model):
         db_column="P_value", max_digits=5, decimal_places=4, blank=True, null=True
     )  # Field name made lowercase.
 
+    def __str__(self):
+        return self.variant_name
+
     class Meta:
         managed = False
         db_table = "study_variants"
-
-    def __str__(self):
-        return self.variant_name
 
 
 class StudyVariantsIndexPage(Page):

@@ -3,31 +3,33 @@
 
 {% block content %}
 
-    <h1>{{ page.title }}</h1>
+<h1>{{ page.title }}</h1>
 
-    <div class="intro">{{ page.intro|richtext }}</div>
+<div class="intro">{{ page.intro|richtext }}</div>
 
-    <table>
-        <thead>
-            <tr>
-                <th scope = "col">Gene symbol</th>
-                <th scope = "col">Cytoband position</th>
-                <th scope = "col">OMIM ID</th>
-                <th scope = "col">RVIS score</th>
-                <th scope = "col">RVIS percentage</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for gene in genes %}
-            <tr>
-                <td><a href="/hpo/{{gene.gene}}/">{{ gene.gene }}</a></td>
-                <td>{{ gene.cytoband_position }}</td>
-                <td>{{ gene.omim }}</td>
-                <td>{{ gene.rvis_score }}</td>
-                <td>{{ gene.rvis_percentage }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Gene symbol</th>
+            <th scope="col">Cytoband position</th>
+            <th scope="col">OMIM ID</th>
+            <th scope="col">RVIS score</th>
+            <th scope="col">RVIS percentage</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for gene in genes %}
+        <tr>
+            <td>{{ gene.gene }}</a></td>
+            <td>{{ gene.cytoband_position }}</td>
+            <td>{{ gene.omim }}</td>
+            <td>{{ gene.rvis_score }}</td>
+            <td>{{ gene.rvis_percentage }}</td>
+            <td><a href="/hpo/{{gene.gene}}/">HPO</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 {% endblock content %}

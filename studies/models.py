@@ -21,12 +21,12 @@ class Studies(models.Model):
         db_column="Methods", blank=True, null=True
     )  # Field name made lowercase.
 
+    def __str__(self):
+        return self.papers
+
     class Meta:
         managed = False
         db_table = "studies"
-
-    def __str__(self):
-        return self.papers
 
 
 class StudiesIndexPage(Page):

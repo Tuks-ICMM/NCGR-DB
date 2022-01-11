@@ -46,12 +46,12 @@ class VariantDetails(models.Model):
         gene_details.models.GeneDetails, models.PROTECT, db_column="Gene"
     )  # Field name made lowercase.
 
+    def __str__(self):
+        return self.variant_name
+
     class Meta:
         managed = False
         db_table = "variant_details"
-
-    def __str__(self):
-        return self.variant_name
 
 
 class EnsemblVep(models.Model):
@@ -178,12 +178,12 @@ class EnsemblVep(models.Model):
         db_column="CADD_phred", max_digits=5, decimal_places=3, blank=True, null=True
     )  # Field name made lowercase.
 
+    def __str__(self):
+        return self.variant
+
     class Meta:
         managed = False
         db_table = "ensembl_vep"
-
-    def __str__(self):
-        return self.variant
 
 
 class MtVep(models.Model):
@@ -236,12 +236,12 @@ class MtVep(models.Model):
         db_column="Query_model", blank=True, null=True
     )  # Field name made lowercase.
 
+    def __str__(self):
+        return self.variant
+
     class Meta:
         managed = False
         db_table = "mt_vep"
-
-    def __str__(self):
-        return self.variant
 
 
 class VariantDetailsIndexPage(Page):
