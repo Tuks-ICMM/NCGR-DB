@@ -19,10 +19,17 @@ import study_variants.models
 
 
 class HomePage(Page):
+
+    subpage_types = [
+        "gene_details.GeneDetailsIndexPage",
+        "studies.StudiesIndexPage",
+        "variant_details.VariantDetailsIndexPage",
+    ]
+
     body = RichTextField(blank=True)
 
     content_panels = Page.content_panels + [
-        FieldPanel("body", classname="full"),
+        FieldPanel("body"),
     ]
 
     # def get_context(self, request, *args, **kwargs):
@@ -45,15 +52,16 @@ class HomePage(Page):
         return context
 
 
-class HpoFilter(django_filters.FilterSet):
-    class Meta:
-        model = gene_details.models.GeneHpo
-        """Can make this a foreign key related name"""
-        fields = ["name"]
+# class HpoFilter(django_filters.FilterSet):
+#     class Meta:
+#         model = gene_details.models.GeneHpo
+#         """Can make this a foreign key related name"""
+#         fields = ["name"]
 
-    # @property
-    # def qs(self):
-    #     """Returns all hpo terms except where null"""
-    #     parent = super().qs
-    #     name = getattr(self.request, 'name', None)
-    #     return parent.filter(name__isnull=True)
+
+# @property
+# def qs(self):
+#     """Returns all hpo terms except where null"""
+#     parent = super().qs
+#     name = getattr(self.request, 'name', None)
+#     return parent.filter(name__isnull=True)

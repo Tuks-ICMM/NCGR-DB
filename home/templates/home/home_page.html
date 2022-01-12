@@ -10,41 +10,45 @@
 
 {% block content %}
 
-        <h2>{{ page.title }} </h2>   
-        {{ page.body|richtext }}
-        <div> <H2>Filters</H2>
-                <div>
-                        <form action=" " method="get">
-                                <label for="featured">Filter by condition:</label>
-                                <select name="featured">
-                                        {% for entry in study_variants %} 
-                                        <option value="{{ entry.condition}}">{{ entry.condition }}</option>
-                                        {% endfor %}
-                                        </select>
-                                        <input type="submit" value="Filter" />
-                        </form>
-                </div>
-                <div>
-                        <form action=" " method="get">
-                                <label for="featured">Filter by gene:</label>
-                                <select name="featured">
-                                        {% for gene in genes %} 
-                                        <option value="{{ gene.gene }}">{{ gene.gene }}</option>
-                                        {% endfor %}
-                                        </select>
-                                        <input type="submit" value="Filter" />
-                        </form>
-                </div>
-                <div>
-                        <form action=" " method="get">
-                                <label for="featured">Filter by disease phenotype:</label>
-                                <select name="featured">
-                                        {% for entry in hpo %} 
-                                        <option value="{{ entry.name }}">{{ entry.name }}</option>
-                                        {% endfor %}
-                                        </select>
-                                        <input type="submit" value="Filter" />
-                        </form>
-                </div>
+<h2>{{ page.title }} </h2>
+{{ page.body|richtext }}
+<div>
+        <H2>Filters</H2>
+        <div>
+                <form action="filter_results/" method="post">
+                        {% csrf_token %}
+                        <!-- {{ form.as_p }} -->
+                        <label>Filter by condition:</label>
+                        <select name="condition">
+                                <option value="">All</option>
+                                {% for entry in study_variants %}
+                                <option value="{{entry.condition}}">{{ entry.condition }}</option>
+                                {% endfor %}
+                        </select>
+                        <input type="submit" value="Filter">
+                </form>
         </div>
-{% endblock content %}
+        <!-- <div>
+                <form action=" " method="get">
+                        <label for="featured">Filter by gene:</label>
+                        <select name="featured">
+                                {% for gene in genes %}
+                                <option value="{{ gene.gene }}">{{ gene.gene }}</option>
+                                {% endfor %}
+                        </select>
+                        <input type="submit" value="Filter" />
+                </form>
+        </div>
+        <div>
+                <form action=" " method="get">
+                        <label for="featured">Filter by disease phenotype:</label>
+                        <select name="featured">
+                                {% for entry in hpo %}
+                                <option value="{{ entry.name }}">{{ entry.name }}</option>
+                                {% endfor %}
+                        </select>
+                        <input type="submit" value="Filter" />
+                </form>
+        </div>
+</div> -->
+        {% endblock content %}

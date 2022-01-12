@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Filter results</h1>
+{% if filtered_variants %}
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Study variant</th>
+            <th scope="col">Condition</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            {% for entry in filtered_study_variants %}
+            <td>{{entry.variant_name}}</td>
+            <td>{{entry.condition}}</td>
+            {% endfor %}
+        </tr>
+    </tbody>
+</table>
+{% else %}
+<p>No filtered variants are available.</p>
+{% endif %}
+
+{% endblock content %}

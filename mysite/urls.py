@@ -15,9 +15,11 @@ urlpatterns = [
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
-    path("hpo_list/", home_views.hpo_list, name="hpo_list"),
+    # path("hpo_list/", home_views.hpo_list, name="hpo_list"),
     path("hpo/<str:gene>/", gene_views.genehpo_view, name="genehpo_view"),
     path("vep/<str:variant_name>/", variant_views.vep_view, name="vep_view"),
+    # path("filter_and_rank/", home_views.filter_view, name="filter_and_rank"),
+    path("filter_results/", home_views.filter_view, name="filter_view"),
     path("search/", search_views.search, name="search"),
 ]
 

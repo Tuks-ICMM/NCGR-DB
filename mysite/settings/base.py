@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_filters",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -94,7 +95,7 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "neshie_db_v7",
+        "NAME": "neshie_db_v8",
         "USER": "root",
         "HOST": "localhost",
         "PORT": 3307,

@@ -30,11 +30,16 @@ django==3.2.11 \
     --hash=sha256:69c94abe5d6b1b088bf475e09b7b74403f943e34da107e798465d2045da27e75
     # via
     #   -r requirements.in
+    #   django-extensions
     #   django-filter
     #   django-taggit
     #   django-treebeard
     #   djangorestframework
     #   wagtail
+django-extensions==3.1.5 \
+    --hash=sha256:28e1e1bf49f0e00307ba574d645b0af3564c981a6dfc87209d48cb98f77d0b1a \
+    --hash=sha256:9238b9e016bb0009d621e05cf56ea8ce5cce9b32e91ad2026996a7377ca28069
+    # via -r requirements.in
 django-filter==21.1 \
     --hash=sha256:632a251fa8f1aadb4b8cceff932bb52fe2f826dd7dfe7f3eac40e5c463d6836e \
     --hash=sha256:f4a6737a30104c98d2e2a5fb93043f36dd7978e0c7ddc92f5998e85433ea5063

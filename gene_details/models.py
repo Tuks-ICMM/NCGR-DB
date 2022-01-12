@@ -9,22 +9,20 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 
 
 # Create your models here.
-class GeneDetails(models.Model):
+class GeneDetails(Page):
 
-    gene = models.CharField(
-        db_column="Gene", primary_key=True, max_length=150
-    )  # Field name made lowercase.
+    subpage_types = ["gene_details.GeneHpo"]
+
+    template = ""
+    gene = models.CharField(max_length=150)  # Field name made lowercase.
     cytoband_position = models.TextField(
-        db_column="Cytoband_position", blank=True, null=True
+        blank=True, null=True
     )  # Field name made lowercase.
-    omim = models.IntegerField(
-        db_column="OMIM", blank=True, null=True
-    )  # Field name made lowercase.
+    omim = models.IntegerField(blank=True, null=True)  # Field name made lowercase.
     rvis_score = models.DecimalField(
-        db_column="RVIS_score", max_digits=3, decimal_places=2, blank=True, null=True
+        max_digits=3, decimal_places=2, blank=True, null=True
     )  # Field name made lowercase.
     rvis_percentage = models.DecimalField(
-        db_column="RVIS_percentage",
         max_digits=4,
         decimal_places=2,
         blank=True,
@@ -34,38 +32,33 @@ class GeneDetails(models.Model):
     def __str__(self):
         return self.gene
 
-    class Meta:
-        managed = False
-        db_table = "gene_details"
+    content_panels = Page.content_panels + [
+        FieldPanel("gene"),
+        FieldPanel("cytoband_position"),
+        FieldPanel("omim"),
+        FieldPanel("rvis_score"),
+        FieldPanel("rvis_percentage"),
+    ]
 
 
-class GeneHpo(models.Model):
+class GeneHpo(Page):
 
-    # template = "genehpo_view.html"
+    template = "genehpo_view.html"
 
     inputterm = models.ForeignKey(
         GeneDetails,
         models.SET_NULL,
-        db_column="InputTerm",
         blank=True,
         null=True,
-        related_name="gene_inputterm",
+        related_name="gene_hpo",
     )  # Field name made lowercase.
-    symbol = models.TextField(
-        db_column="Symbol", blank=True, null=True
-    )  # Field name made lowercase.
-    name = models.TextField(
-        db_column="Name", blank=True, null=True
-    )  # Field name made lowercase.
-    hpoid = models.TextField(
-        db_column="HPOId", blank=True, null=True
-    )  # Field name made lowercase.
+    symbol = models.TextField(blank=True, null=True)  # Field name made lowercase.
+    name = models.TextField(blank=True, null=True)  # Field name made lowercase.
+    hpoid = models.TextField(blank=True, null=True)  # Field name made lowercase.
     alternativeid = models.TextField(
-        db_column="AlternativeId", blank=True, null=True
+        blank=True, null=True
     )  # Field name made lowercase.
-    definition = models.TextField(
-        db_column="Definition", blank=True, null=True
-    )  # Field name made lowercase.
+    definition = models.TextField(blank=True, null=True)  # Field name made lowercase.
 
     content_panels = Page.content_panels + [
         FieldPanel("inputterm"),
@@ -84,15 +77,14 @@ class GeneHpo(models.Model):
         """Returns all hpo terms except where null"""
         return GeneHpo.objects.exclude(name__isnull=True)
 
-    class Meta:
-        managed = False
-        db_table = "gene_hpo"
-
 
 class GeneDetailsIndexPage(Page):
+
+    subpage_types = ["gene_details.GeneDetails"]
+
     intro = RichTextField(blank=True)
 
-    content_panels = Page.content_panels + [FieldPanel("intro", classname="full")]
+    content_panels = Page.content_panels + [FieldPanel("intro")]
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
