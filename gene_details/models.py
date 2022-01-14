@@ -1,11 +1,9 @@
 from django.db import models
-from django.db import models
 from django.shortcuts import render
-
-from wagtail.core.models import Page
-from wagtail.core.fields import RichTextField
 from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
+from wagtail.core.fields import RichTextField
+from wagtail.core.models import Page
 
 
 # Create your models here.
@@ -78,7 +76,7 @@ class GeneHpo(Page):
         return GeneHpo.objects.exclude(name__isnull=True)
 
 
-class GeneDetailsIndexPage(Page):
+class GeneDetailsIndexPage(RoutablePageMixin, Page):
 
     subpage_types = ["gene_details.GeneDetails"]
 
@@ -86,8 +84,20 @@ class GeneDetailsIndexPage(Page):
 
     content_panels = Page.content_panels + [FieldPanel("intro")]
 
-    def get_context(self, request, *args, **kwargs):
-        context = super().get_context(request, *args, **kwargs)
-        context["genes"] = GeneDetails.objects.all()
-        context["requested_hpo"] = GeneHpo.objects.all()
-        return context
+    # def get_context(self, request, *args, **kwargs):
+    #     context = super().get_context(request, *args, **kwargs)
+    #     context["genes"] = GeneDetails.objects.all()
+    #     context["requested_hpo"] = GeneHpo.objects.all()
+    #     return context
+
+    @route(r"^$")
+    def gene_index_page(self, request, *args, **kwargs):
+        """View all the genes"""
+        all_genes = GeneDetails.objects.all()
+        return self.render(request, context_overrides={"genes": all_genes})
+
+    @route(r"^(?P<gene_id>[A-Z0-9]+/{0,1})$")
+    def selected_gene(self, request, gene_id, *args, **kwargs):
+        """View a specific gene"""
+        gene = GeneDetails.objects.get(gene_id=gene_id)
+        return self.render(request, context_overrides={"genes": gene})

@@ -1,17 +1,19 @@
-from django.db import models
-from wagtail.core.models import Page
-from wagtail.core.fields import RichTextField
-from wagtail.admin.edit_handlers import FieldPanel
-
 import sys
+
+from django.db import models
+from wagtail.admin.edit_handlers import FieldPanel
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
+from wagtail.core.fields import RichTextField
+from wagtail.core.models import Page
 
 sys.path.append("C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/NESHIE-DB/gene_details")
 import gene_details.models
 
+
 # Create your models here.
 class VariantDetails(Page):
 
-    subpage_types = ['variant_details.EnsemblVep', 'variant_details.MtVep']
+    subpage_types = ["variant_details.EnsemblVep", "variant_details.MtVep"]
 
     variant_name = models.CharField(max_length=150)  # Field name made lowercase.
     reference_genome = models.TextField(
@@ -61,7 +63,7 @@ class VariantDetails(Page):
 
 class EnsemblVep(Page):
     variant = models.ForeignKey(
-        "VariantDetails", models.CASCADE, related_name="ensembl_vep"
+        "VariantDetails", models.PROTECT, related_name="ensembl_vep"
     )  # Field name made lowercase.
     variant_name = models.TextField(blank=True, null=True)  # Field name made lowercase.
     ensembl_canonical_hgvsc = models.TextField(
@@ -202,7 +204,7 @@ class EnsemblVep(Page):
 
 class MtVep(Page):
     variant = models.ForeignKey(
-        "VariantDetails", models.CASCADE, related_name="mtveps"
+        "VariantDetails", models.PROTECT, related_name="mtveps"
     )  # Field name made lowercase.
     variant_name = models.TextField(null=True, blank=True)  # Field name made lowercase.
     reference_genome = models.TextField(
@@ -261,8 +263,8 @@ class MtVep(Page):
     ]
 
 
-class VariantDetailsIndexPage(Page):
-    subpage_types = ['variant_details.VariantDetails']
+class VariantDetailsIndexPage(RoutablePageMixin, Page):
+    subpage_types = ["variant_details.VariantDetails"]
 
     intro = RichTextField(blank=True)
 
@@ -272,3 +274,15 @@ class VariantDetailsIndexPage(Page):
         context = super().get_context(request, *args, **kwargs)
         context["variants"] = VariantDetails.objects.all()
         return context
+
+    @route(r"^$")
+    def variant_index_page(self, request, *args, **kwargs):
+        """View all the study variants"""
+        variants = VariantDetails.objects.all()
+        return self.render(request, context_overrides={"variants": variants})
+
+    @route(r"^(?P<variant_id>./{0,1})$")
+    def selected_variant(self, request, variant_id, *args, **kwargs):
+        """View a specific study variant"""
+        variant = VariantDetails.objects.get(variant_id=variant_id)
+        return self.render(request, context_overrides={"variant": variant})

@@ -1,9 +1,10 @@
-from django.db import models
-from wagtail.core.models import Page
-from wagtail.core.fields import RichTextField
-from wagtail.admin.edit_handlers import FieldPanel
-
 import sys
+
+from django.db import models
+from wagtail.admin.edit_handlers import FieldPanel
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
+from wagtail.core.fields import RichTextField
+from wagtail.core.models import Page
 
 sys.path.append(
     "C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/NESHIE-DB/variant_details"
@@ -13,8 +14,9 @@ import variant_details.models
 sys.path.append("C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/NESHIE-DB/mysite/studies")
 import studies.models
 
+
 # Create your models here.
-class StudyVariants(Page):
+class StudyVariants(models.Model):
 
     paper = models.ForeignKey(
         studies.models.Studies,
@@ -46,8 +48,7 @@ class StudyVariants(Page):
     def __str__(self):
         return self.variant_name
 
-    content_panels = Page.content_panels + [
-        FieldPanel("paper"),
+    panels = [
         FieldPanel("variant"),
         FieldPanel("variant_name"),
         FieldPanel("reported_allele_or_genotype"),
@@ -57,16 +58,3 @@ class StudyVariants(Page):
         FieldPanel("odds_ratio"),
         FieldPanel("p_value"),
     ]
-
-
-class StudyVariantsIndexPage(Page):
-    subpage_types = ["study_variants.StudyVariants"]
-
-    intro = RichTextField(blank=True)
-
-    content_panels = Page.content_panels + [FieldPanel("intro")]
-
-    def get_context(self, request):
-        context = super().get_context(request)
-        context["study_variants"] = StudyVariants.objects.all()
-        return context
