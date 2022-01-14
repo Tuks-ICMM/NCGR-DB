@@ -4,7 +4,7 @@ from django.db import models
 from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import RichTextField
-from wagtail.core.models import Page
+from wagtail.core.models import Page, ParentalKey
 
 sys.path.append(
     "C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/NESHIE-DB/variant_details"
@@ -18,14 +18,12 @@ import studies.models
 # Create your models here.
 class StudyVariants(models.Model):
 
-    paper = models.ForeignKey(
-        studies.models.Studies,
-        models.PROTECT,
+    paper = ParentalKey(
+        "studies.Studies",
         related_name="study_variants",
     )  # Field name made lowercase.
-    variant = models.ForeignKey(
-        variant_details.models.VariantDetails,
-        models.PROTECT,
+    variant = ParentalKey(
+        "variant_details.VariantDetails",
     )  # Field name made lowercase.
     variant_name = models.TextField(blank=True, null=True)  # Field name made lowercase.
     reported_allele_or_genotype = models.TextField(
