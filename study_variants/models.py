@@ -20,12 +20,17 @@ class StudyVariants(models.Model):
 
     paper = ParentalKey(
         "studies.Studies",
+        on_delete=models.SET_NULL,
         related_name="study_variants",
+        null=True,
+        blank=True,
     )  # Field name made lowercase.
     variant = ParentalKey(
         "variant_details.VariantDetails",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
     )  # Field name made lowercase.
-    variant_name = models.TextField(blank=True, null=True)  # Field name made lowercase.
     reported_allele_or_genotype = models.TextField(
         blank=True, null=True
     )  # Field name made lowercase.
@@ -36,19 +41,16 @@ class StudyVariants(models.Model):
     disease_status = models.TextField(
         blank=True, null=True
     )  # Field name made lowercase.
-    odds_ratio = models.DecimalField(
-        max_digits=5, decimal_places=3, blank=True, null=True
+    odds_ratio = models.IntegerField(
+        blank=True, null=True
     )  # Field name made lowercase.
-    p_value = models.DecimalField(
-        max_digits=5, decimal_places=4, blank=True, null=True
-    )  # Field name made lowercase.
+    p_value = models.IntegerField(blank=True, null=True)  # Field name made lowercase.
 
     def __str__(self):
-        return self.variant_name
+        return self.variant
 
     panels = [
         FieldPanel("variant"),
-        FieldPanel("variant_name"),
         FieldPanel("reported_allele_or_genotype"),
         FieldPanel("condition"),
         FieldPanel("condition_description"),

@@ -94,11 +94,11 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "neshie_db_v8",
-        "USER": "root",
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "NESHIE-db",
+        "USER": "postgres",
         "HOST": "localhost",
-        "PORT": 3307,
+        "PORT": 5432,
         "PASSWORD": "Waterlemon17*",
     }
 }

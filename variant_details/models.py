@@ -1,7 +1,9 @@
 import sys
 
 from django.db import models
-from wagtail.admin.edit_handlers import FieldPanel
+from modelcluster.fields import ParentalKey
+from wagtail.admin.edit_handlers import (FieldPanel, InlinePanel,
+                                         MultiFieldPanel)
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
@@ -13,7 +15,7 @@ import gene_details.models
 # Create your models here.
 class VariantDetails(Page):
 
-    subpage_types = ["variant_details.EnsemblVep", "variant_details.MtVep"]
+    parent_page_types = ["variant_details.VariantDetailsIndexPage"]
 
     variant_name = models.CharField(max_length=150)  # Field name made lowercase.
     reference_genome = models.TextField(
@@ -39,105 +41,119 @@ class VariantDetails(Page):
         blank=True, null=True
     )  # Field name made lowercase.
     variant_type = models.TextField(blank=True, null=True)  # Field name made lowercase.
-    gene = models.ForeignKey(
-        gene_details.models.GeneDetails, models.PROTECT, related_name="variant_details"
+    gene = ParentalKey(
+        gene_details.models.GeneDetails,
+        on_delete=models.SET_NULL,
+        related_name="variant_details",
+        null=True,
+        blank=True,
     )  # Field name made lowercase.
 
     def __str__(self):
         return self.variant_name
 
     content_panels = Page.content_panels + [
-        FieldPanel("variant_name"),
-        FieldPanel("reference_genome"),
-        FieldPanel("transcript_id"),
-        FieldPanel("chromosome"),
-        FieldPanel("genomic_start_position"),
-        FieldPanel("genomic_end_position"),
-        FieldPanel("reference_allele"),
-        FieldPanel("alternate_allele"),
-        FieldPanel("disease_association_with_ref_allele"),
-        FieldPanel("variant_type"),
-        FieldPanel("gene"),
+        MultiFieldPanel(
+            [
+                FieldPanel("variant_name"),
+                FieldPanel("reference_genome"),
+                FieldPanel("transcript_id"),
+                FieldPanel("chromosome"),
+                FieldPanel("genomic_start_position"),
+                FieldPanel("genomic_end_position"),
+                FieldPanel("reference_allele"),
+                FieldPanel("alternate_allele"),
+                FieldPanel("disease_association_with_ref_allele"),
+                FieldPanel("variant_type"),
+            ],
+            heading="Variant details",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("gene"),
+            ],
+            heading="Gene",
+        ),
+        MultiFieldPanel(
+            [
+                InlinePanel("ensembl_vep"),
+            ],
+            heading="Ensembl VEP",
+        ),
+        MultiFieldPanel(
+            [
+                InlinePanel("mt_vep"),
+            ],
+            heading="MutationTaster VEP",
+        ),
     ]
 
 
-class EnsemblVep(Page):
-    variant = models.ForeignKey(
-        "VariantDetails", models.PROTECT, related_name="ensembl_vep"
-    )  # Field name made lowercase.
-    variant_name = models.TextField(blank=True, null=True)  # Field name made lowercase.
+class EnsemblVep(models.Model):
+
+    variant = ParentalKey(
+        "variant_details.VariantDetails",
+        on_delete=models.SET_NULL,
+        related_name="ensembl_vep",
+        null=True,
+        blank=True,
+    )  # Field name made lowercase. # Field name made lowercase.
     ensembl_canonical_hgvsc = models.TextField(
         blank=True, null=True
     )  # Field name made lowercase. Field renamed to remove unsuitable characters.
     consequence_terms = models.TextField(
         blank=True, null=True
     )  # Field name made lowercase.
-    af_1000gp3_eur = models.DecimalField(
-        max_digits=10,
-        decimal_places=9,
+    af_1000gp3_eur = models.IntegerField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    af_1000gp3 = models.DecimalField(
-        max_digits=10, decimal_places=9, blank=True, null=True
+    af_1000gp3 = models.IntegerField(
+        blank=True, null=True
     )  # Field name made lowercase.
-    af_1000gp3_afr = models.DecimalField(
-        max_digits=10,
-        decimal_places=9,
+    af_1000gp3_afr = models.IntegerField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    af_1000gp3_amr = models.DecimalField(
-        max_digits=10,
-        decimal_places=9,
+    af_1000gp3_amr = models.IntegerField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    af_1000gp3_sas = models.DecimalField(
-        max_digits=10,
-        decimal_places=9,
+    af_1000gp3_sas = models.IntegerField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    af_1000gp3_eas = models.DecimalField(
-        max_digits=10,
-        decimal_places=9,
+    af_1000gp3_eas = models.IntegerField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    exac_adj_af = models.DecimalField(
-        max_digits=10, decimal_places=9, blank=True, null=True
+    exac_adj_af = models.IntegerField(
+        blank=True, null=True
     )  # Field name made lowercase.
-    exac_afr_af = models.DecimalField(
-        max_digits=10, decimal_places=9, blank=True, null=True
+    exac_afr_af = models.IntegerField(
+        blank=True, null=True
     )  # Field name made lowercase.
-    exac_amr_af = models.DecimalField(
-        max_digits=10, decimal_places=9, blank=True, null=True
+    exac_amr_af = models.IntegerField(
+        blank=True, null=True
     )  # Field name made lowercase.
-    exac_eas_af = models.DecimalField(
-        max_digits=10, decimal_places=9, blank=True, null=True
+    exac_eas_af = models.IntegerField(
+        blank=True, null=True
     )  # Field name made lowercase.
-    exac_nfe_af = models.DecimalField(
-        max_digits=10, decimal_places=9, blank=True, null=True
+    exac_nfe_af = models.IntegerField(
+        blank=True, null=True
     )  # Field name made lowercase.
-    exac_sas_af = models.DecimalField(
-        max_digits=10, decimal_places=9, blank=True, null=True
+    exac_sas_af = models.IntegerField(
+        blank=True, null=True
     )  # Field name made lowercase.
-    gnomad_genomes_af = models.DecimalField(
-        max_digits=10,
-        decimal_places=9,
+    gnomad_genomes_af = models.IntegerField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    gnomad_genomes_afr_af = models.DecimalField(
-        max_digits=10,
-        decimal_places=9,
+    gnomad_genomes_afr_af = models.IntegerField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    gnomad_genomes_eas_af = models.DecimalField(
-        max_digits=10,
-        decimal_places=9,
+    gnomad_genomes_eas_af = models.IntegerField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
@@ -152,25 +168,22 @@ class EnsemblVep(Page):
     sift4g_pred = models.TextField(blank=True, null=True)  # Field name made lowercase.
     fathmm_score = models.TextField(blank=True, null=True)  # Field name made lowercase.
     fathmm_pred = models.TextField(blank=True, null=True)  # Field name made lowercase.
-    sift_score = models.DecimalField(
-        max_digits=3, decimal_places=2, blank=True, null=True
+    sift_score = models.IntegerField(
+        blank=True, null=True
     )  # Field name made lowercase.
     sift_prediction = models.TextField(
         blank=True, null=True
     )  # Field name made lowercase.
-    cadd_raw = models.DecimalField(
-        max_digits=7, decimal_places=6, blank=True, null=True
-    )  # Field name made lowercase.
-    cadd_phred = models.DecimalField(
-        max_digits=5, decimal_places=3, blank=True, null=True
+    cadd_raw = models.IntegerField(blank=True, null=True)  # Field name made lowercase.
+    cadd_phred = models.IntegerField(
+        blank=True, null=True
     )  # Field name made lowercase.
 
     def __str__(self):
         return self.variant
 
-    content_panels = Page.content_panels + [
+    panels = [
         FieldPanel("variant"),
-        FieldPanel("variant_name"),
         FieldPanel("ensembl_canonical_hgvsc"),
         FieldPanel("consequence_terms"),
         FieldPanel("af_1000gp3_eur"),
@@ -202,35 +215,14 @@ class EnsemblVep(Page):
     ]
 
 
-class MtVep(Page):
-    variant = models.ForeignKey(
-        "VariantDetails", models.PROTECT, related_name="mtveps"
-    )  # Field name made lowercase.
-    variant_name = models.TextField(null=True, blank=True)  # Field name made lowercase.
-    reference_genome = models.TextField(
-        blank=True, null=True
-    )  # Field name made lowercase.
-    chromosome = models.TextField(blank=True, null=True)  # Field name made lowercase.
-    genomic_start_position = models.IntegerField(
-        blank=True, null=True
-    )  # Field name made lowercase.
-    genomic_end_position = models.IntegerField(
-        blank=True, null=True
-    )  # Field name made lowercase.
-    reference_allele = models.TextField(
-        blank=True, null=True
-    )  # Field name made lowercase.
-    alternate_allele = models.TextField(
-        blank=True, null=True
-    )  # Field name made lowercase.
-    query_chr = models.TextField(blank=True, null=True)  # Field name made lowercase.
-    query_genomic_start_pos = models.IntegerField(
-        blank=True, null=True
-    )  # Field name made lowercase.
-    query_ref = models.TextField(blank=True, null=True)  # Field name made lowercase.
-    query_alt = models.TextField(blank=True, null=True)  # Field name made lowercase.
-    query_transcript_stable = models.TextField(
-        blank=True, null=True
+class MtVep(models.Model):
+
+    variant = ParentalKey(
+        "variant_details.VariantDetails",
+        on_delete=models.SET_NULL,
+        related_name="mt_vep",
+        null=True,
+        blank=True,
     )  # Field name made lowercase.
     query_ncbi_geneid = models.TextField(
         blank=True, null=True
@@ -243,20 +235,8 @@ class MtVep(Page):
     def __str__(self):
         return self.variant
 
-    content_panels = Page.content_panels + [
+    panels = [
         FieldPanel("variant"),
-        FieldPanel("variant_name"),
-        FieldPanel("reference_genome"),
-        FieldPanel("chromosome"),
-        FieldPanel("genomic_start_position"),
-        FieldPanel("genomic_end_position"),
-        FieldPanel("reference_allele"),
-        FieldPanel("alternate_allele"),
-        FieldPanel("query_chr"),
-        FieldPanel("query_genomic_start_pos"),
-        FieldPanel("query_ref"),
-        FieldPanel("query_alt"),
-        FieldPanel("query_transcript_stable"),
         FieldPanel("query_ncbi_geneid"),
         FieldPanel("query_prediction"),
         FieldPanel("query_model"),
@@ -264,6 +244,11 @@ class MtVep(Page):
 
 
 class VariantDetailsIndexPage(RoutablePageMixin, Page):
+
+    max_count = 1
+
+    parent_page_types = ["home.HomePage"]
+
     subpage_types = ["variant_details.VariantDetails"]
 
     intro = RichTextField(blank=True)

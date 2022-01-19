@@ -1,11 +1,10 @@
-from django.db import models
-
-from wagtail.core.models import Page
-
-from wagtail.core.fields import RichTextField
-from wagtail.admin.edit_handlers import FieldPanel
-import django_filters
 import sys
+
+import django_filters
+from django.db import models
+from wagtail.admin.edit_handlers import FieldPanel
+from wagtail.core.fields import RichTextField
+from wagtail.core.models import Page
 
 sys.path.append(
     "C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/neshiedbv7_links_working/mysite/gene_details"
@@ -19,6 +18,9 @@ import study_variants.models
 
 
 class HomePage(Page):
+    max_count = 1
+
+    parent_page_types = ["wagtailcore.Page"]
 
     subpage_types = [
         "gene_details.GeneDetailsIndexPage",

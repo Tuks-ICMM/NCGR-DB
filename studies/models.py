@@ -1,5 +1,5 @@
 from django.db import models
-from wagtail.admin.edit_handlers import FieldPanel, InlinePanel
+from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
@@ -7,11 +7,8 @@ from wagtail.core.models import Page
 
 # Create your models here.
 class Studies(Page):
-    # variants = models.ManyToManyField(
-    #     "variant_details.VariantDetails",
-    #     through="study_variants.StudyVariants",
-    #     through_fields=("paper", "variant"),
-    # )
+
+    parent_page_types = ["studies.StudiesIndexPage"]
 
     doi = models.TextField(blank=True, null=True)  # Field name made lowercase.
     papers = models.TextField(blank=True, null=True)  # Field name made lowercase.
@@ -27,17 +24,25 @@ class Studies(Page):
         return self.papers
 
     content_panels = Page.content_panels + [
-        FieldPanel("doi"),
-        FieldPanel("papers"),
-        FieldPanel("study_population_description"),
-        FieldPanel("unicef_regional_classification"),
-        FieldPanel("methods"),
-        InlinePanel("study_variants")
-        # InlinePanel("variants", label="Variants"),
+        MultiFieldPanel(
+            [
+                FieldPanel("doi"),
+                FieldPanel("papers"),
+                FieldPanel("study_population_description"),
+                FieldPanel("unicef_regional_classification"),
+                FieldPanel("methods"),
+            ],
+            heading="Study",
+        ),
+        MultiFieldPanel([InlinePanel("study_variants")], heading="Study variants"),
     ]
 
 
 class StudiesIndexPage(RoutablePageMixin, Page):
+
+    max_count = 1
+
+    parent_page_types = ["home.HomePage"]
     subpage_types = ["studies.Studies"]
 
     intro = RichTextField(blank=True)
