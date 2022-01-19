@@ -1,9 +1,9 @@
 import pandas as pd
 
 f = pd.read_excel(
-    "C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/Data_import/gene_details.xlsx"
+    "C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/Data_import/variant_details.xlsx"
 )
-parent_page = GeneDetailsIndexPage.objects.get(title="Gene details")
+parent_page = VariantDetailsIndexPage.objects.get(title="Gene details")
 
 f = f.astype(object).where(f.notnull(), None)
 
