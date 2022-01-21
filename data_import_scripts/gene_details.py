@@ -20,3 +20,16 @@ for index, row in f.iterrows():
         parent_page.add_child(instance=s)
     else:
         print("Existing Entry")
+
+for index, row in f.iterrows():
+    a = GeneDetails.objects.filter(title=row["Gene"])
+    if a.exists():
+        s = GeneDetails.objects.get(title=a[0], gene=row["Gene"])
+        s.rvis_score = str(row["RVIS_score"])
+        s.rvis_percentage = str(row["RVIS_percentage"])
+        s.save_revision().publish()
+        s.save()
+        # print(s)
+    else:
+        print("No corresponding gene name")
+        print(row)

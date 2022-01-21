@@ -41,10 +41,8 @@ class StudyVariants(models.Model):
     disease_status = models.TextField(
         blank=True, null=True
     )  # Field name made lowercase.
-    odds_ratio = models.IntegerField(
-        blank=True, null=True
-    )  # Field name made lowercase.
-    p_value = models.IntegerField(blank=True, null=True)  # Field name made lowercase.
+    odds_ratio = models.FloatField(blank=True, null=True)  # Field name made lowercase.
+    p_value = models.FloatField(blank=True, null=True)  # Field name made lowercase.
 
     def __str__(self):
         return self.variant

@@ -3,8 +3,7 @@ from turtle import heading
 from django.db import models
 from django.shortcuts import render
 from modelcluster.fields import ParentalKey
-from wagtail.admin.edit_handlers import (FieldPanel, InlinePanel,
-                                         MultiFieldPanel)
+from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
@@ -22,10 +21,8 @@ class GeneDetails(Page):
         blank=True, null=True
     )  # Field name made lowercase.
     omim = models.IntegerField(blank=True, null=True)  # Field name made lowercase.
-    rvis_score = models.IntegerField(
-        blank=True, null=True
-    )  # Field name made lowercase.
-    rvis_percentage = models.IntegerField(
+    rvis_score = models.FloatField(blank=True, null=True)  # Field name made lowercase.
+    rvis_percentage = models.FloatField(
         blank=True,
         null=True,
     )  # Field name made lowercase.

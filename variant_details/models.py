@@ -2,8 +2,7 @@ import sys
 
 from django.db import models
 from modelcluster.fields import ParentalKey
-from wagtail.admin.edit_handlers import (FieldPanel, InlinePanel,
-                                         MultiFieldPanel)
+from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
@@ -37,7 +36,7 @@ class VariantDetails(Page):
     alternate_allele = models.TextField(
         blank=True, null=True
     )  # Field name made lowercase.
-    disease_association_with_ref_allele = models.TextField(
+    disease_association_with_ref_allele = models.BooleanField(
         blank=True, null=True
     )  # Field name made lowercase.
     variant_type = models.TextField(blank=True, null=True)  # Field name made lowercase.
@@ -104,56 +103,42 @@ class EnsemblVep(models.Model):
     consequence_terms = models.TextField(
         blank=True, null=True
     )  # Field name made lowercase.
-    af_1000gp3_eur = models.IntegerField(
+    af_1000gp3_eur = models.FloatField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    af_1000gp3 = models.IntegerField(
-        blank=True, null=True
-    )  # Field name made lowercase.
-    af_1000gp3_afr = models.IntegerField(
+    af_1000gp3 = models.FloatField(blank=True, null=True)  # Field name made lowercase.
+    af_1000gp3_afr = models.FloatField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    af_1000gp3_amr = models.IntegerField(
+    af_1000gp3_amr = models.FloatField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    af_1000gp3_sas = models.IntegerField(
+    af_1000gp3_sas = models.FloatField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    af_1000gp3_eas = models.IntegerField(
+    af_1000gp3_eas = models.FloatField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    exac_adj_af = models.IntegerField(
-        blank=True, null=True
-    )  # Field name made lowercase.
-    exac_afr_af = models.IntegerField(
-        blank=True, null=True
-    )  # Field name made lowercase.
-    exac_amr_af = models.IntegerField(
-        blank=True, null=True
-    )  # Field name made lowercase.
-    exac_eas_af = models.IntegerField(
-        blank=True, null=True
-    )  # Field name made lowercase.
-    exac_nfe_af = models.IntegerField(
-        blank=True, null=True
-    )  # Field name made lowercase.
-    exac_sas_af = models.IntegerField(
-        blank=True, null=True
-    )  # Field name made lowercase.
-    gnomad_genomes_af = models.IntegerField(
+    exac_adj_af = models.FloatField(blank=True, null=True)  # Field name made lowercase.
+    exac_afr_af = models.FloatField(blank=True, null=True)  # Field name made lowercase.
+    exac_amr_af = models.FloatField(blank=True, null=True)  # Field name made lowercase.
+    exac_eas_af = models.FloatField(blank=True, null=True)  # Field name made lowercase.
+    exac_nfe_af = models.FloatField(blank=True, null=True)  # Field name made lowercase.
+    exac_sas_af = models.FloatField(blank=True, null=True)  # Field name made lowercase.
+    gnomad_genomes_af = models.FloatField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    gnomad_genomes_afr_af = models.IntegerField(
+    gnomad_genomes_afr_af = models.FloatField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    gnomad_genomes_eas_af = models.IntegerField(
+    gnomad_genomes_eas_af = models.FloatField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
@@ -168,16 +153,12 @@ class EnsemblVep(models.Model):
     sift4g_pred = models.TextField(blank=True, null=True)  # Field name made lowercase.
     fathmm_score = models.TextField(blank=True, null=True)  # Field name made lowercase.
     fathmm_pred = models.TextField(blank=True, null=True)  # Field name made lowercase.
-    sift_score = models.IntegerField(
-        blank=True, null=True
-    )  # Field name made lowercase.
+    sift_score = models.FloatField(blank=True, null=True)  # Field name made lowercase.
     sift_prediction = models.TextField(
         blank=True, null=True
     )  # Field name made lowercase.
-    cadd_raw = models.IntegerField(blank=True, null=True)  # Field name made lowercase.
-    cadd_phred = models.IntegerField(
-        blank=True, null=True
-    )  # Field name made lowercase.
+    cadd_raw = models.FloatField(blank=True, null=True)  # Field name made lowercase.
+    cadd_phred = models.FloatField(blank=True, null=True)  # Field name made lowercase.
 
     def __str__(self):
         return self.variant
