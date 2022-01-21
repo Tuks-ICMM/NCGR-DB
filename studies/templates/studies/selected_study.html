@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 text-centre px-5">
+        <h1>{{ page.title }}</h1>
+    </div>
+    <div class="col-12">
+        <p> <strong>Study ID</strong> {{ study.id }}</p>
+        <p><strong>DOI</strong>{{ study.doi }}</p>
+        <p><strong>Paper reference</strong>{{ study.papers }}</p>
+        <p><strong>Study population description</strong>{{ study.study_population_description }}</p>
+        <p><strong>UNICEF regional classification</strong>{{ study.unicef_regional_classification }}</p>
+        <p><strong>Methods</strong>{{ study.methods }}</p>
+    </div>
+    <div class="col-12 p-5">
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Reported allele or genotype</th>
+                    <th scope="col">Condition</th>
+                    <th scope="col">Condition description</th>
+                    <th scope="col">Disease status</th>
+                    <th scope="col">Odds ratio</th>
+                    <th scope="col">P value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for variant in page.study_variants.all %}
+                <tr>
+                    <td>{{variant.reported_allele_or_genotype}}</td>
+                    <td>{{variant.condition}}</td>
+                    <td>{{variant.condition_description}}</td>
+                    <td>{{variant.disease_status}}</td>
+                    <td>{{variant.odds_ratio}}</td>
+                    <td>{{variant.p_value}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock content %}

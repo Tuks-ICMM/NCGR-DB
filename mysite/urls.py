@@ -1,24 +1,22 @@
 from django.conf import settings
-from django.urls import include, path
 from django.contrib import admin
-
+from django.urls import include, path
+from gene_details import views as gene_views
+from home import views as home_views
+from search import views as search_views
+from variant_details import views as variant_views
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
-
-from home import views as home_views
-from gene_details import views as gene_views
-from variant_details import views as variant_views
-from search import views as search_views
 
 urlpatterns = [
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     # path("hpo_list/", home_views.hpo_list, name="hpo_list"),
-    path("hpo/<str:gene>/", gene_views.genehpo_view, name="genehpo_view"),
-    path("vep/<str:variant_name>/", variant_views.vep_view, name="vep_view"),
-    # path("filter_and_rank/", home_views.filter_view, name="filter_and_rank"),
+    # path("hpo/<str:gene>/", gene_views.genehpo_view, name="genehpo_view"),
+    # path("vep/<str:variant_name>/", variant_views.vep_view, name="vep_view"),
+    # # path("filter_and_rank/", home_views.filter_view, name="filter_and_rank"),
     path("filter_results/", home_views.filter_view, name="filter_view"),
     path("search/", search_views.search, name="search"),
 ]

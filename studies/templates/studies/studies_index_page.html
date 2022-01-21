@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags wagtailroutablepage_tags %}
 
 {% block content %}
 <div class="row">
@@ -24,7 +24,7 @@
                 {% for study in all_studies %}
                 <tr>
                     <td>{{ study.id }}</td>
-                    <td>{{ study.doi }}</td>
+                    <td><a href="{% routablepageurl page 'study' doi=study.doi %}">{{ study.doi }}</a></td>
                     <td>{{ study.papers }}</td>
                     <td>{{ study.study_population_description }}</td>
                     <td>{{ study.unicef_regional_classification }}</td>
