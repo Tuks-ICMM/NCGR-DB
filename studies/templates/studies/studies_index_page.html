@@ -2,34 +2,38 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
+<div class="row">
+    <div class="col-12 text-centre px-5">
+        <h1>{{ page.title }}</h1>
+    </div>
 
-    <h1>{{ page.title }}</h1>
-
-    <div class="intro">{{ page.intro|richtext }}</div>
-
-    <table>
-        <thead>
-            <tr>
-                <th scope = "col">Study Id</th>
-                <th scope = "col">DOI</th>
-                <th scope = "col">Paper</th>
-                <th scope = "col">Population description</th>
-                <th scope = "col">UNICEF regional classification</th>
-                <th scope = "col">Methods</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for study in studies %}
-            <tr>
-                <td>{{ study.id }}</td>
-                <td>{{ study.doi }}</td>
-                <td>{{ study.papers }}</td>
-                <td>{{ study.study_population_description }}</td>
-                <td>{{ study.unicef_regional_classification }}</td>
-                <td>{{ study.methods }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="col-12">{{ page.intro|richtext }}</div>
+    <div class="col-12 p-5">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Study ID</th>
+                    <th scope="col">DOI</th>
+                    <th scope="col">Paper</th>
+                    <th scope="col">Population description</th>
+                    <th scope="col">UNICEF regional classification</th>
+                    <th scope="col">Methods</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for study in all_studies %}
+                <tr>
+                    <td>{{ study.id }}</td>
+                    <td>{{ study.doi }}</td>
+                    <td>{{ study.papers }}</td>
+                    <td>{{ study.study_population_description }}</td>
+                    <td>{{ study.unicef_regional_classification }}</td>
+                    <td>{{ study.methods }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 {% endblock content %}

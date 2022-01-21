@@ -21,8 +21,12 @@ class GeneDetails(Page):
         blank=True, null=True
     )  # Field name made lowercase.
     omim = models.IntegerField(blank=True, null=True)  # Field name made lowercase.
-    rvis_score = models.FloatField(blank=True, null=True)  # Field name made lowercase.
-    rvis_percentage = models.FloatField(
+    rvis_score = models.DecimalField(
+        max_digits=3, decimal_places=2, blank=True, null=True
+    )  # Field name made lowercase.
+    rvis_percentage = models.DecimalField(
+        max_digits=4,
+        decimal_places=2,
         blank=True,
         null=True,
     )  # Field name made lowercase.

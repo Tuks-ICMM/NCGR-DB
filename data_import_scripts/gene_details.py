@@ -21,15 +21,33 @@ for index, row in f.iterrows():
     else:
         print("Existing Entry")
 
+f["RVIS_percentage"] = f["RVIS_percentage"].apply(
+    lambda x: str(x) if not None else None
+)
+f["RVIS_score"] = f["RVIS_score"].apply(lambda x: str(x) if not None else None)
+
+f["RVIS_percentage"] = f["RVIS_percentage"].apply(lambda x: None if x == "None" else x)
+
+f["RVIS_score"] = f["RVIS_score"].apply(lambda x: None if x == "None" else x)
+
 for index, row in f.iterrows():
-    a = GeneDetails.objects.filter(title=row["Gene"])
-    if a.exists():
-        s = GeneDetails.objects.get(title=a[0], gene=row["Gene"])
-        s.rvis_score = str(row["RVIS_score"])
-        s.rvis_percentage = str(row["RVIS_percentage"])
+    try:
+        print("--------------------------------")
+        print(index)
+        print(type(row["RVIS_score"]))
+        print(type(row["RVIS_percentage"]))
+        print("--------------------------------")
+        s = GeneDetails.objects.get(title=row["Gene"])
+        s.rvis_score = row["RVIS_score"]
+        s.rvis_percentage = row["RVIS_percentage"]
         s.save_revision().publish()
-        s.save()
-        # print(s)
-    else:
-        print("No corresponding gene name")
+    # print(s)
+    except Exception as e:
+        print("--------------------------------")
+        print(e)
+        print(index)
         print(row)
+        print("--------------------------------")
+else:
+    print("No corresponding gene name")
+    print(row)
