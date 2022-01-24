@@ -4,3 +4,100 @@ services:
     build:
       context: "."
       dockerfile: "Dockerfile"
+  jam:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
+    container_name: jam
+    environment:
+      - node.name=jam
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=butter,waffle
+      - cluster.initial_master_nodes=jam,butter,waffle
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+  butter:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
+    container_name: butter
+    environment:
+      - node.name=butter
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=jam,waffle
+      - cluster.initial_master_nodes=jam,butter,waffle
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data02:/usr/share/elasticsearch/data
+    networks:
+      - elastic
+  waffle:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
+    container_name: waffle
+    environment:
+      - node.name=waffle
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=butter,waffle
+      - cluster.initial_master_nodes=jam,butter,waffle
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data03:/usr/share/elasticsearch/data
+    networks:
+      - elastic
+  master:
+    container_name: "${COMPOSE_PROJECT_NAME:-citus}_master"
+    image: "citusdata/citus:10.2.3"
+    ports: [ "${COORDINATOR_EXTERNAL_PORT:-5432}:5432" ]
+    labels: [ "com.citusdata.role=Master" ]
+    environment:
+      &AUTH
+      POSTGRES_USER: "${POSTGRES_USER:-postgres}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      PGUSER: "${POSTGRES_USER:-postgres}"
+      PGPASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_HOST_AUTH_METHOD: "${POSTGRES_HOST_AUTH_METHOD:-trust}"
+  worker:
+    image: "citusdata/citus:10.2.3"
+    labels: [ "com.citusdata.role=Worker" ]
+    depends_on: [ manager ]
+    environment: *AUTH
+    command: "/wait-for-manager.sh"
+    volumes:
+      - healthcheck-volume:/healthcheck
+  manager:
+    container_name: "${COMPOSE_PROJECT_NAME:-citus}_manager"
+    image: "citusdata/membership-manager:0.3.0"
+    volumes:
+      - "${DOCKER_SOCK:-/var/run/docker.sock}:/var/run/docker.sock"
+      - healthcheck-volume:/healthcheck
+    depends_on: [ master ]
+    environment: *AUTH
+
+volumes:
+  data01:
+    driver: local
+  data02:
+    driver: local
+  data03:
+    driver: local
+  healthcheck-volume:
+
+networks:
+  elastic:
+    driver: bridge
