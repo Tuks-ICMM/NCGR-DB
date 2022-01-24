@@ -27,3 +27,37 @@ for index, row in f.iterrows():
     else:
         print("No corresponding study or variant name")
         print(row)
+
+# f["Odds_ratio"] = f["Odds_ratio"].apply(lambda x: None if x == "None" else x)
+# f["P_value"] = f["P_value"].apply(lambda x: None if x == "None" else x)
+
+for index, row in f.iterrows():
+    a = Studies.objects.filter(title=row["DOI"])
+    b = VariantDetails.objects.filter(title=row["Variant_name"])
+    try:
+        print("--------------------------------")
+        print(index)
+        print(type(row["Odds_ratio"]))
+        print(type(row["P_value"]))
+        print("--------------------------------")
+        s = StudyVariants.objects.get(
+            paper=a[0],
+            variant=b[0],
+            reported_allele_or_genotype=row["Reported_allele_or_genotype"],
+            condition=row["Condition"],
+            condition_description=row["Condition_description"],
+            disease_status=row["Disease_status"],
+        )
+        s.odds_ratio = row["Odds_ratio"]
+        s.p_value = row["P_value"]
+        s.save()
+    # print(s)
+    except Exception as e:
+        print("--------------------------------")
+        print(e)
+        print(index)
+        print(row)
+        print("--------------------------------")
+else:
+    print("No corresponding study or variant")
+    print(row)

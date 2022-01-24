@@ -103,42 +103,42 @@ class EnsemblVep(models.Model):
     consequence_terms = models.TextField(
         blank=True, null=True
     )  # Field name made lowercase.
-    af_1000gp3_eur = models.FloatField(
+    af_1000gp3_eur = models.TextField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    af_1000gp3 = models.FloatField(blank=True, null=True)  # Field name made lowercase.
-    af_1000gp3_afr = models.FloatField(
+    af_1000gp3 = models.TextField(blank=True, null=True)  # Field name made lowercase.
+    af_1000gp3_afr = models.TextField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    af_1000gp3_amr = models.FloatField(
+    af_1000gp3_amr = models.TextField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    af_1000gp3_sas = models.FloatField(
+    af_1000gp3_sas = models.TextField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    af_1000gp3_eas = models.FloatField(
+    af_1000gp3_eas = models.TextField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    exac_adj_af = models.FloatField(blank=True, null=True)  # Field name made lowercase.
-    exac_afr_af = models.FloatField(blank=True, null=True)  # Field name made lowercase.
-    exac_amr_af = models.FloatField(blank=True, null=True)  # Field name made lowercase.
-    exac_eas_af = models.FloatField(blank=True, null=True)  # Field name made lowercase.
-    exac_nfe_af = models.FloatField(blank=True, null=True)  # Field name made lowercase.
-    exac_sas_af = models.FloatField(blank=True, null=True)  # Field name made lowercase.
-    gnomad_genomes_af = models.FloatField(
+    exac_adj_af = models.TextField(blank=True, null=True)  # Field name made lowercase.
+    exac_afr_af = models.TextField(blank=True, null=True)  # Field name made lowercase.
+    exac_amr_af = models.TextField(blank=True, null=True)  # Field name made lowercase.
+    exac_eas_af = models.TextField(blank=True, null=True)  # Field name made lowercase.
+    exac_nfe_af = models.TextField(blank=True, null=True)  # Field name made lowercase.
+    exac_sas_af = models.TextField(blank=True, null=True)  # Field name made lowercase.
+    gnomad_genomes_af = models.TextField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    gnomad_genomes_afr_af = models.FloatField(
+    gnomad_genomes_afr_af = models.TextField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
-    gnomad_genomes_eas_af = models.FloatField(
+    gnomad_genomes_eas_af = models.TextField(
         blank=True,
         null=True,
     )  # Field name made lowercase.
@@ -153,12 +153,12 @@ class EnsemblVep(models.Model):
     sift4g_pred = models.TextField(blank=True, null=True)  # Field name made lowercase.
     fathmm_score = models.TextField(blank=True, null=True)  # Field name made lowercase.
     fathmm_pred = models.TextField(blank=True, null=True)  # Field name made lowercase.
-    sift_score = models.FloatField(blank=True, null=True)  # Field name made lowercase.
+    sift_score = models.TextField(blank=True, null=True)  # Field name made lowercase.
     sift_prediction = models.TextField(
         blank=True, null=True
     )  # Field name made lowercase.
-    cadd_raw = models.FloatField(blank=True, null=True)  # Field name made lowercase.
-    cadd_phred = models.FloatField(blank=True, null=True)  # Field name made lowercase.
+    cadd_raw = models.TextField(blank=True, null=True)  # Field name made lowercase.
+    cadd_phred = models.TextField(blank=True, null=True)  # Field name made lowercase.
 
     def __str__(self):
         return self.variant
@@ -245,7 +245,11 @@ class VariantDetailsIndexPage(RoutablePageMixin, Page):
     def variant_index_page(self, request, *args, **kwargs):
         """View all the study variants"""
         variants = VariantDetails.objects.all()
-        return self.render(request, context_overrides={"variants": variants})
+        return self.render(
+            request,
+            context_overrides={"variants": variants},
+            template="variant_details/variant_details_index_page.html",
+        )
 
     @route(r"^(?P<variant_id>./{0,1})$")
     def selected_variant(self, request, variant_id, *args, **kwargs):

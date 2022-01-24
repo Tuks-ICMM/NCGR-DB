@@ -49,7 +49,7 @@ class StudyVariants(models.Model):
     )  # Field name made lowercase.
 
     def __str__(self):
-        return self.variant
+        return str(self.odds_ratio)
 
     panels = [
         FieldPanel("variant"),

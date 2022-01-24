@@ -7,12 +7,12 @@
         <h1>{{ page.title }}</h1>
     </div>
     <div class="col-12">
-        <p> <strong>Study ID</strong> {{ study.id }}</p>
-        <p><strong>DOI</strong>{{ study.doi }}</p>
-        <p><strong>Paper reference</strong>{{ study.papers }}</p>
-        <p><strong>Study population description</strong>{{ study.study_population_description }}</p>
-        <p><strong>UNICEF regional classification</strong>{{ study.unicef_regional_classification }}</p>
-        <p><strong>Methods</strong>{{ study.methods }}</p>
+        <p> <strong>Study ID:</strong> {{ study.id }}</p>
+        <p><strong>DOI:</strong> {{ study.doi }}</p>
+        <p><strong>Paper reference:</strong> {{ study.papers }}</p>
+        <p><strong>Study population description:</strong> {{ study.study_population_description }}</p>
+        <p><strong>UNICEF regional classification:</strong> {{ study.unicef_regional_classification }}</p>
+        <p><strong>Methods:</strong> {{ study.methods }}</p>
     </div>
     <div class="col-12 p-5">
 
@@ -28,7 +28,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for variant in page.study_variants.all %}
+                {% for variant in study.study_variants.all %}
                 <tr>
                     <td>{{variant.reported_allele_or_genotype}}</td>
                     <td>{{variant.condition}}</td>

@@ -54,7 +54,7 @@ class StudiesIndexPage(RoutablePageMixin, Page):
     #     context["studies"] = Studies.objects.all()
     #     return context
 
-    @route(r"^$", name="index")
+    @route(r"^$")
     def studies_index_page(self, request, *args, **kwargs):
         """View all the studies"""
         all_studies = Studies.objects.all()
@@ -64,12 +64,13 @@ class StudiesIndexPage(RoutablePageMixin, Page):
             template="studies/studies_index_page.html",
         )
 
-    @route(r"(?P<doi>10.\d{4,9}\/[-._;()\/:a-z0-9A-Z]+\/{0,1})", name="study")
-    def selected_study(self, request, doi, *args, **kwargs):
+    # @route(r"(?P<doi>10.\d{4,9}\/[-._;()\/:a-z0-9A-Z]+\/{0,1})", name="study")
+    @route(r"(?P<slug>[0-9a-zA-Z-_]+)[\/]{0,1}")
+    def selected_study(self, request, slug, *args, **kwargs):
         """View a specific gene"""
-        study = Studies.objects.get(doi=doi)
+        studies = Studies.objects.get(slug=slug)
         return self.render(
             request,
-            context_overrides={"studies": study},
             template="studies/selected_study.html",
+            context_overrides={"study": studies},
         )

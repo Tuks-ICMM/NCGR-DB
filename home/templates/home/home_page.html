@@ -9,46 +9,67 @@
 {% endblock extra_css %}
 
 {% block content %}
-
-<h2>{{ page.title }} </h2>
-{{ page.body|richtext }}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+                <a class="navbar-brand" href="#">NESHIE-DB</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                Table selection
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                <li><a class="dropdown-item" href="#">Studies</a></li>
+                                                <li><a class="dropdown-item" href="#">Variants</a></li>
+                                                <li>
+                                                        <hr class="dropdown-divider">
+                                                </li>
+                                                <li><a class="dropdown-item" href="#">Genes</a></li>
+                                        </ul>
+                                <li class="nav-item">
+                                        <a class="nav-link" href="#">Login</a>
+                                </li>
+                        </ul>
+                        <form class="d-flex">
+                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                <button class="btn btn-outline-success" type="submit">Search</button>
+                        </form>
+                </div>
+        </div>
+</nav>
 <div>
-        <H2>Filters</H2>
+        <div class="col-12 text-centre px-2 pt-4">
+                <h1>{{ page.title }}</h1>
+        </div>
+        <div class="px-2 pt-3">{{ page.body|richtext }}</div>
         <div>
-                <form action="filter_results/" method="post">
-                        {% csrf_token %}
-                        <!-- {{ form.as_p }} -->
-                        <label>Filter by condition:</label>
-                        <select name="condition">
-                                <option value="">All</option>
-                                {% for entry in study_variants %}
-                                <option value="{{entry.condition}}">{{ entry.condition }}</option>
-                                {% endfor %}
-                        </select>
-                        <input type="submit" value="Filter">
-                </form>
+                <!-- <H2>Filters</H2>
+                <div>
+                        <form action="filter_results/" method="post">
+                                {% csrf_token %} -->
+                <!-- {{ form.as_p }} -->
+                <!-- <label>Filter by condition:</label>
+                                <select name="condition">
+                                        <option value="">All</option>
+                                        {% for entry in study_variants %}
+                                        <option value="{{entry.condition}}">{{ entry.condition }}</option>
+                                        {% endfor %}
+                                </select>
+                                <input type="submit" value="Filter">
+                        </form>
+                </div> -->
         </div>
-        <!-- <div>
-                <form action=" " method="get">
-                        <label for="featured">Filter by gene:</label>
-                        <select name="featured">
-                                {% for gene in genes %}
-                                <option value="{{ gene.gene }}">{{ gene.gene }}</option>
-                                {% endfor %}
-                        </select>
-                        <input type="submit" value="Filter" />
-                </form>
-        </div>
-        <div>
-                <form action=" " method="get">
-                        <label for="featured">Filter by disease phenotype:</label>
-                        <select name="featured">
-                                {% for entry in hpo %}
-                                <option value="{{ entry.name }}">{{ entry.name }}</option>
-                                {% endfor %}
-                        </select>
-                        <input type="submit" value="Filter" />
-                </form>
-        </div>
-</div> -->
-        {% endblock content %}
+</div>
+
+
+
+{% endblock content %}
