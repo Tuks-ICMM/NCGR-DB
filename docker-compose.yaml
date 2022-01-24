@@ -1,0 +1,6 @@
+version: "3.0"
+services:
+  neshie-db:
+    build:
+      context: "."
+      dockerfile: "Dockerfile"
