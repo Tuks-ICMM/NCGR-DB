@@ -1,5 +1,6 @@
 {% load static wagtailcore_tags wagtailuserbar %}
 {% load wagtailcore_tags wagtailimages_tags wagtailroutablepage_tags load_index_pages %}
+{% load_page %}
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -50,12 +51,9 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Table selection</a>
             <div class="dropdown-menu">
-              <a class="dropdown-item" href="#">Studies</a>
-              {% comment %} <li><a class="dropdown-item" href="{% routablepageurl studies_page "studies_index_page" %}">Studies</a></li> {% endcomment %}
-              {% comment %} {{studies_page}} {% endcomment %}
-              {% comment %} <li><a class="dropdown-item" href="{% load_studies_page %}">Studies</a></li> {% endcomment %}
-              <a class="dropdown-item" href="#">Variants</a>
-              <a class="dropdown-item" href="#">Genes</a>
+              <a class="dropdown-item" href="{% routablepageurl studies_page "studies_index_page" %}">Studies</a>
+              <a class="dropdown-item" href="{% routablepageurl variants_page "variant_index_page" %}">Variants</a>
+              <a class="dropdown-item" href="{% routablepageurl genes_page "gene_index_page" %}">Genes</a>
             </div>
           </li>
         </ul>
