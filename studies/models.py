@@ -1,4 +1,5 @@
 from django.db import models
+from study_variants.models import StudyVariants
 from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import RichTextField
@@ -68,9 +69,10 @@ class StudiesIndexPage(RoutablePageMixin, Page):
     @route(r"(?P<slug>[0-9a-zA-Z-_]+)[\/]{0,1}")
     def selected_study(self, request, slug, *args, **kwargs):
         """View a specific gene"""
-        studies = Studies.objects.get(slug=slug)
+        study = Studies.objects.get(slug=slug)
+        study_variants = StudyVariants.objects.filter(paper=study)
         return self.render(
             request,
             template="studies/selected_study.html",
-            context_overrides={"study": studies},
+            context_overrides={"study": study, "study_variants": study_variants},
         )

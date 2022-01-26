@@ -28,6 +28,7 @@ class StudyVariants(models.Model):
     variant = ParentalKey(
         "variant_details.VariantDetails",
         on_delete=models.SET_NULL,
+        related_name="study_variants",
         null=True,
         blank=True,
     )  # Field name made lowercase.

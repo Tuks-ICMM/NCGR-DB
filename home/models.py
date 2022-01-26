@@ -2,6 +2,7 @@ import sys
 
 import django_filters
 from django.db import models
+from studies.models import StudiesIndexPage
 from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
@@ -46,6 +47,7 @@ class HomePage(Page):
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
+        context["all_studies"] = StudiesIndexPage.objects.get()
         context["genes"] = gene_details.models.GeneDetails.objects.all()
         context["hpo"] = gene_details.models.GeneHpo.objects.all()
         context["study_variants"] = study_variants.models.StudyVariants.objects.values(

@@ -3,11 +3,10 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-12 text-centre px-5">
-        <h1>{{ page.title }}</h1>
+    <div class="col-12 text-centre p-5">
+        <h1>Study Findings</h1>
     </div>
-    <div class="col-12">
-        <p> <strong>Study ID:</strong> {{ study.id }}</p>
+    <div class="col-12 px-5">
         <p><strong>DOI:</strong> {{ study.doi }}</p>
         <p><strong>Paper reference:</strong> {{ study.papers }}</p>
         <p><strong>Study population description:</strong> {{ study.study_population_description }}</p>
@@ -16,9 +15,10 @@
     </div>
     <div class="col-12 p-5">
 
-        <table class="table table-hover">
+        <table class="table table-hover table-striped">
             <thead>
                 <tr>
+                    <th scope="col">Variant</th>
                     <th scope="col">Reported allele or genotype</th>
                     <th scope="col">Condition</th>
                     <th scope="col">Condition description</th>
@@ -28,8 +28,9 @@
                 </tr>
             </thead>
             <tbody>
-                {% for variant in study.study_variants.all %}
+                {% for variant in study_variants%}
                 <tr>
+                    <td>{{variant.variant}}</td>
                     <td>{{variant.reported_allele_or_genotype}}</td>
                     <td>{{variant.condition}}</td>
                     <td>{{variant.condition_description}}</td>
@@ -38,6 +39,8 @@
                     <td>{{variant.p_value}}</td>
                 </tr>
                 {% endfor %}
+                <!-- {% for variant in study.study_variants.all %}
+                {% endfor %} -->
             </tbody>
         </table>
     </div>

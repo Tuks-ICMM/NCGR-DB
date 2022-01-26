@@ -82,6 +82,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
+            "libraries": {"load_index_pages": "home.templatetags.load_index_pages"},
         },
     },
 ]

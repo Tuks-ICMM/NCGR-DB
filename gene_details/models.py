@@ -110,8 +110,12 @@ class GeneDetailsIndexPage(RoutablePageMixin, Page):
         all_genes = GeneDetails.objects.all()
         return self.render(request, context_overrides={"genes": all_genes})
 
-    @route(r"^(?P<gene_id>[A-Z0-9]+/{0,1})$")
-    def selected_gene(self, request, gene_id, *args, **kwargs):
+    @route(r"^(?P<slug>[a-z0-9]+)[\/]{0,1}$")
+    def selected_gene(self, request, slug, *args, **kwargs):
         """View a specific gene"""
-        gene = GeneDetails.objects.get(gene_id=gene_id)
-        return self.render(request, context_overrides={"genes": gene})
+        gene = GeneDetails.objects.get(slug=slug)
+        return self.render(
+            request,
+            template="gene_details/selected_gene.html",
+            context_overrides={"gene": gene},
+        )

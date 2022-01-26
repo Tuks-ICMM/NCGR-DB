@@ -1,0 +1,18 @@
+.cursor-pointer{
+    cursor: pointer;
+  }
+
+  .sticky-top th {
+    position: sticky;
+    top: 56px;
+    background: white;
+    
+  }
+
+.home-heading {
+  width: 100%;
+}
+
+.body-panel {
+  background-color:white;
+}

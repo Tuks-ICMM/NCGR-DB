@@ -1,52 +1,16 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags wagtailroutablepage_tags %}
 
 {% block content %}
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">NESHIE-DB</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Table selection
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">Studies</a></li>
-                        <li><a class="dropdown-item" href="#">Variants</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#">Genes</a></li>
-                    </ul>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Login</a>
-                </li>
-            </ul>
-            <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-        </div>
-    </div>
-</nav>
 <div class="row">
-    <div class="col-12 text-centre px-5 pt-5">
-        <h1>{{ page.title }}</h1>
+    <div class="col-12 text-centre px-5 pt-5 pb-4">
+        <h1 class="display-4">{{ page.title }}</h1>
     </div>
     <div class="col-12 px-5">
-        <table class="table table-hover">
-            <thead>
+        <table class="table table-hover table-striped">
+            <thead class="sticky-top">
                 <tr>
-                    <th scope="col">Variant dbSNP or HGVS ID</th>
+                    <th scope="col">Variant identifier (dbSNP or HGVS)</th>
                     <th scope="col">Reference genome</th>
                     <th scope="col">Transcript ID</th>
                     <th scope="col">Chromosome</th>
@@ -54,7 +18,6 @@
                     <th scope="col">Genomic end position</th>
                     <th scope="col">Reference allele</th>
                     <th scope="col">Alternate allele</th>
-                    <th scope="col">Reference allele reported in disease</th>
                     <th scope="col">Variant type</th>
                     <th scope="col">Gene</th>
                     <th scope="col"></th>
@@ -62,7 +25,7 @@
             </thead>
             <tbody>
                 {% for variant in variants %}
-                <tr>
+                <tr class="cursor-pointer clickable" onclick="location.href='{% routablepageurl page "selected_variant" slug=variant.slug %}'" title="Click to view variant effect predictions">
                     <td>{{ variant.variant_name }}</td>
                     <td>{{ variant.reference_genome }}</td>
                     <td>{{ variant.transcript_id }}</td>
@@ -71,7 +34,6 @@
                     <td>{{ variant.genomic_end_position }}</td>
                     <td>{{ variant.reference_allele }}</td>
                     <td>{{ variant.alternate_allele }}</td>
-                    <td>{{ variant.disease_association_with_ref_allele }}</td>
                     <td>{{ variant.variant_type }}</td>
                     <td>{{ variant.gene }}</td>
                 </tr>

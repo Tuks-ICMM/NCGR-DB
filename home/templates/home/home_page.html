@@ -9,49 +9,92 @@
 {% endblock extra_css %}
 
 {% block content %}
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-                <a class="navbar-brand" href="#">NESHIE-DB</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                <li class="nav-item">
-                                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                Table selection
-                                        </a>
-                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                                <li><a class="dropdown-item" href="#">Studies</a></li>
-                                                <li><a class="dropdown-item" href="#">Variants</a></li>
-                                                <li>
-                                                        <hr class="dropdown-divider">
-                                                </li>
-                                                <li><a class="dropdown-item" href="#">Genes</a></li>
-                                        </ul>
-                                <li class="nav-item">
-                                        <a class="nav-link" href="#">Login</a>
-                                </li>
-                        </ul>
-                        <form class="d-flex">
-                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                                <button class="btn btn-outline-success" type="submit">Search</button>
-                        </form>
+<div>
+        <div>
+                <div class="home-heading col-12 text-centre pt-5 px-5 pb-2 bg-light">
+                        <h1>{{ page.title }}</h1>
+                </div>
+                <div class="body-panel pb-3 px-5 bg-light">
+                        {{ page.body|richtext }}
                 </div>
         </div>
-</nav>
-<div>
-        <div class="col-12 text-centre px-2 pt-4">
-                <h1>{{ page.title }}</h1>
+        <div class="p-5">
+                <form method="get">
+                        <fieldset>
+                                <legend>
+                                        <h3>Customised search</h3>
+                                        <h6>Filter gene and variant results by custom parameters</h6>
+                                </legend>
+                                <fieldset>
+                                        <legend class="mt-4">Condition</legend>
+                                        <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox"
+                                                        id="flexSwitchCheckChecked" checked="">
+                                                <label class="form-check-label"
+                                                        for="flexSwitchCheckChecked">NESHIE</label>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox"
+                                                        id="flexSwitchCheckDefault">
+                                                <label class="form-check-label" for="flexSwitchCheckDefault">CP</label>
+                                        </div>
+                                </fieldset>
+                                <div class="form-group">
+                                        <legend for="exampleSelect2" class="form-label mt-4">Condition subtype</legend>
+                                        <select multiple="" class="form-select" id="exampleSelect2">
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option>
+                                        </select>
+                                </div>
+                                <fieldset class="form-group">
+                                        <legend class="mt-4">Strength of variant association with condition</legend>
+                                        <label for="customRange1" class="form-label">P-value</label>
+                                        <input type="range" class="form-range" id="customRange1">
+                                        <label for="customRange3" class="form-label">Odds Ratio</label>
+                                        <input type="range" class="form-range" min="0" max="5" step="0.5"
+                                                id="customRange3">
+                                </fieldset>
+                        </fieldset>
+                        <fieldset>
+                                <legend class="mt-4">Variant effect prediction</legend>
+                                <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
+                                                checked="">
+                                        <label class="form-check-label" for="flexSwitchCheckChecked">Pathogenic</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                                        <label class="form-check-label" for="flexSwitchCheckDefault">Deleterious</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                                        <label class="form-check-label" for="flexSwitchCheckDefault">Likely
+                                                Pathogenic</label>
+                                </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                                <legend class="mt-4">Genic intolerance to variation</legend>
+                                <label for="customRange3" class="form-label">RVIS score</label>
+                                <input type="range" class="form-range" min="0" max="5" step="0.5" id="customRange3">
+                        </fieldset>
+                        <div class="pb-4 form-group">
+                                <legend for="exampleSelect2" class="form-label mt-4">Human Phenotype Ontology associated
+                                        with gene</legend>
+                                <select multiple="" class="form-select" id="exampleSelect2">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
         </div>
-        <div class="px-2 pt-3">{{ page.body|richtext }}</div>
-        <div>
+        {% comment %} <div> {% endcomment %}
                 <!-- <H2>Filters</H2>
                 <div>
                         <form action="filter_results/" method="post">
@@ -67,7 +110,8 @@
                                 <input type="submit" value="Filter">
                         </form>
                 </div> -->
-        </div>
+                {% comment %}
+        </div> {% endcomment %}
 </div>
 
 

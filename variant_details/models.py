@@ -2,7 +2,8 @@ import sys
 
 from django.db import models
 from modelcluster.fields import ParentalKey
-from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel
+from wagtail.admin.edit_handlers import (FieldPanel, InlinePanel,
+                                         MultiFieldPanel)
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
@@ -247,12 +248,16 @@ class VariantDetailsIndexPage(RoutablePageMixin, Page):
         variants = VariantDetails.objects.all()
         return self.render(
             request,
-            context_overrides={"variants": variants},
             template="variant_details/variant_details_index_page.html",
+            context_overrides={"variants": variants},
         )
 
-    @route(r"^(?P<variant_id>./{0,1})$")
-    def selected_variant(self, request, variant_id, *args, **kwargs):
+    @route(r"^(?P<slug>[a-z0-9_-]+)[\/]{0,1}$")
+    def selected_variant(self, request, slug, *args, **kwargs):
         """View a specific study variant"""
-        variant = VariantDetails.objects.get(variant_id=variant_id)
-        return self.render(request, context_overrides={"variant": variant})
+        variant = VariantDetails.objects.get(slug=slug)
+        return self.render(
+            request,
+            template="variant_details/selected_variant.html",
+            context_overrides={"variant": variant},
+        )

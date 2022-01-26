@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 text-centre p-5">
+        <h1>Human Phenotype Ontology</h1>
+    </div>
+    <div class="col-12 px-5">
+        <p><strong>Gene:</strong> {{ gene.gene }}</p>
+        <p><strong>Cytoband position:</strong> {{ gene.cytoband_position }}</p>
+        <p><strong>OMIM:</strong> {{ gene.omim }}</p>
+        <p><strong>RVIS score:</strong> {{ gene.rvis_score }}</p>
+        <p><strong>RVIS percentage:</strong> {{ gene.rvis_percentage }}</p>
+    </div>
+    <div class="col-12 p-5">
+
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Gene symbol</th>
+                    <th scope="col">Phenotype name</th>
+                    <th scope="col">HPO ID</th>
+                    <th scope="col">Alternative HPO ID</th>
+                    <th scope="col">Phenotype description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for hpo in gene.gene_hpo.all%}
+                <tr>
+                    <td>{{hpo.symbol}}</td>
+                    <td>{{hpo.name}}</td>
+                    <td>{{hpo.hpoid}}</td>
+                    <td>{{hpo.alternativeid}}</td>
+                    <td>{{hpo.definition}}</td>
+                </tr>
+                {% endfor %}
+                <!-- {% for variant in study.study_variants.all %}
+                {% endfor %} -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock content %}

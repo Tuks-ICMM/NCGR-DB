@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 text-centre p-5">
+        <h1>Variant effect prediction</h1>
+    </div>
+    <div class="col-12 px-5">
+        <p><strong>Variant Name:</strong> {{ variant.variant_name }}</p>
+        <p><strong>Reference genome:</strong> {{ variant.reference_genome }}</p>
+        <p><strong>Transcript ID:</strong> {{ variant.transcript_id }}</p>
+        <p><strong>Chromosome:</strong> {{ variant.chromosome }}</p>
+        <p><strong>Genomic start position:</strong> {{ variant.genomic_start_position }}</p>
+        <p><strong>Genomic end position:</strong> {{ variant.genomic_end_position }}</p>
+        <p><strong>Reference allele:</strong> {{ variant.reference_allele }}</p>
+        <p><strong>Alternate allele:</strong> {{ variant.alternate_allele }}</p>
+        <p><strong>Disease association with reference allele:</strong> {{ variant.disease_association_with_ref_allele }}</p>
+        <p><strong>Variant type:</strong> {{ variant.variant_type }}</p>
+        <p><strong>Gene:</strong> {{ variant.gene }}</p>
+    </div>
+    <div class="col-12 p-5">
+
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Query prediction</th>
+                    <th scope="col">Query model</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for effect in variant.mt_vep.all%}
+                <tr>
+                    <td>{{effect.query_prediction}}</td>
+                    <td>{{effect.query_model}}</td>
+                </tr>
+                {% endfor %}
+                <!-- {% for variant in study.study_variants.all %}
+                {% endfor %} -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock content %}
