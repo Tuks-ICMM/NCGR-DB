@@ -1,18 +1,21 @@
-.cursor-pointer{
+/* .cursor-pointer{
     cursor: pointer;
-  }
+  } */
 
-  .sticky-top th {
-    position: sticky;
-    top: 56px;
-    background: white;
-    
-  }
-
-.home-heading {
-  width: 100%;
+.sticky-top th {
+  position: sticky;
+  background: white;
+  top: 0px;
 }
 
 .body-panel {
   background-color:white;
+}
+
+table thead.sticky-top {
+  z-index: 99;
+}
+
+table tr.cursor-pointer {
+  z-index: 99;
 }

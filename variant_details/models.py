@@ -1,9 +1,9 @@
 import sys
 
 from django.db import models
+from gene_details.models import GeneDetails
 from modelcluster.fields import ParentalKey
-from wagtail.admin.edit_handlers import (FieldPanel, InlinePanel,
-                                         MultiFieldPanel)
+from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
@@ -260,4 +260,14 @@ class VariantDetailsIndexPage(RoutablePageMixin, Page):
             request,
             template="variant_details/selected_variant.html",
             context_overrides={"variant": variant},
+        )
+
+    @route(r"^(?P<gene>[A-Z0-9]+)[\/]{0,1}$")
+    def selected_gene(self, request, gene, *args, **kwargs):
+        """View a specific gene"""
+        gene = GeneDetails.objects.get(gene=gene)
+        return self.render(
+            request,
+            template="gene_details/selected_gene.html",
+            context_overrides={"gene": gene},
         )

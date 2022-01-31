@@ -7,26 +7,26 @@
         <h1 class="display-4">{{ page.title }}</h1>
     </div>
     <div class="col-12 px-5">
-        <table class="table table-hover table-striped">
-            <thead class="sticky-top">
+        <input id="custom_search_bar" type="text" class="form-control" type="text" placeholder="Local filter" aria-label="Local filter"/>
+        <table data-search-selector="#custom_search_bar" data-toggle="table" data-search="true" data-show-header="true" data-search-highlight = "true" data-search-accent-neutralise="true" data-height="560"  data-show-columns="true" data-pagination="true" class="table table-hover table-striped">
+            <thead data-sticky-header="true" data-sticky-header-offset-y="60">
                 <tr>
-                    <th scope="col">Variant identifier (dbSNP or HGVS)</th>
-                    <th scope="col">Reference genome</th>
-                    <th scope="col">Transcript ID</th>
-                    <th scope="col">Chromosome</th>
-                    <th scope="col">Genomic start position</th>
-                    <th scope="col">Genomic end position</th>
-                    <th scope="col">Reference allele</th>
-                    <th scope="col">Alternate allele</th>
-                    <th scope="col">Variant type</th>
-                    <th scope="col">Gene</th>
-                    <th scope="col"></th>
+                    <th data-sortable="true" scope="col">Variant identifier (dbSNP or HGVS)</th>
+                    <th data-sortable="true" scope="col">Reference genome</th>
+                    <th data-sortable="true" scope="col">Transcript ID</th>
+                    <th data-sortable="true" scope="col">Chromosome</th>
+                    <th data-sortable="true" scope="col">Genomic start position</th>
+                    <th data-sortable="true" scope="col">Genomic end position</th>
+                    <th data-sortable="true" scope="col">Reference allele</th>
+                    <th data-sortable="true" scope="col">Alternate allele</th>
+                    <th data-sortable="true" scope="col">Variant type</th>
+                    <th data-sortable="true" scope="col">Gene</th>
                 </tr>
             </thead>
             <tbody>
                 {% for variant in variants %}
-                <tr class="cursor-pointer clickable" onclick="location.href='{% routablepageurl page "selected_variant" slug=variant.slug %}'" title="Click to view variant effect predictions">
-                    <td>{{ variant.variant_name }}</td>
+                <tr class="cursor-pointer clickable" onclick="location.href='{% routablepageurl page "selected_variant" slug=variant.slug %}'" title="View variant effect predictions">
+                    <td><a href="{% routablepageurl page "selected_variant" slug=variant.slug %}" title="View variant effect predictions">{{ variant.variant_name }}</a></td>
                     <td>{{ variant.reference_genome }}</td>
                     <td>{{ variant.transcript_id }}</td>
                     <td>{{ variant.chromosome }}</td>
@@ -35,7 +35,7 @@
                     <td>{{ variant.reference_allele }}</td>
                     <td>{{ variant.alternate_allele }}</td>
                     <td>{{ variant.variant_type }}</td>
-                    <td>{{ variant.gene }}</td>
+                    <td><a href="{% routablepageurl page "selected_gene" gene=variant.gene.gene %}" title="View gene details">{{ variant.gene }}</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

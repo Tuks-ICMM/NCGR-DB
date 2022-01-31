@@ -7,21 +7,21 @@
         <h1 class="display-4">{{ page.title }}</h1>
     </div>
     <div class="col-12 px-5">
-        <table class="table table-hover table-striped">
-            <thead class="sticky-top">
+        <input id="custom_search_bar" type="text" class="form-control" type="text" placeholder="Local filter" aria-label="Local filter"/>
+        <table data-search-selector="#custom_search_bar" data-toggle="table" data-search="true" data-show-header="true" data-search-highlight = "true" data-search-accent-neutralise="true" data-height="560"  data-show-columns="true" data-pagination="true" class="table table-hover table-striped">
+            <thead data-sticky-header="true" data-sticky-header-offset-y="60">
                 <tr>
-                    <th scope="col">Gene symbol</th>
-                    <th scope="col">Cytoband position</th>
-                    <th scope="col">OMIM ID</th>
-                    <th scope="col">RVIS score</th>
-                    <th scope="col">RVIS percentage</th>
-                    <th scope="col"></th>
+                    <th data-sortable="true" scope="col">Gene symbol</th>
+                    <th data-sortable="true" scope="col">Cytoband position</th>
+                    <th data-sortable="true" scope="col">OMIM ID</th>
+                    <th data-sortable="true" scope="col">RVIS score</th>
+                    <th data-sortable="true" scope="col">RVIS percentage</th>
                 </tr>
             </thead>
             <tbody>
                 {% for gene in genes %}
                 <tr class="cursor-pointer clickable" onclick="location.href='{% routablepageurl page "selected_gene" slug=gene.slug %}'" title="Click to view gene HPO">
-                    <td>{{ gene.gene }}</a></td>
+                    <td><a href="{% routablepageurl page "selected_gene" slug=gene.slug %}" title="View gene Human Phenotype Ontology">{{ gene.gene }}</a></td>
                     <td>{{ gene.cytoband_position }}</td>
                     <td>{{ gene.omim }}</td>
                     <td>{{ gene.rvis_score }}</td>

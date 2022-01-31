@@ -133,3 +133,24 @@ for index, row in f.iterrows():
 else:
     print("No corresponding variant")
     print(row)
+
+for index, row in f.iterrows():
+    a = VariantDetails.objects.filter(title=row["Variant_name"])
+    try:
+        print("--------------------------------")
+        print(index)
+        print("--------------------------------")
+        s = EnsemblVep.objects.get(
+            variant=a[0],
+        )
+        s.polyphen2_hvar_pred = row["Polyphen2_hvar_pred"]
+    # print(s)
+    except Exception as e:
+        print("--------------------------------")
+        print(e)
+        print(index)
+        print(row)
+        print("--------------------------------")
+else:
+    print("No corresponding variant")
+    print(row)

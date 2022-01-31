@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags wagtailroutablepage_tags %}
 
 {% block content %}
 <div class="row">
@@ -8,6 +8,9 @@
     </div>
     <div class="col-12 px-5">
         <p><strong>Variant Name:</strong> {{ variant.variant_name }}</p>
+        {% for effect in variant.ensembl_vep.all%}
+            <p><strong>Ensembl canonical HGVSC:</strong> {{ effect.ensembl_canonical_hgvsc }}</p>
+        {%endfor%}
         <p><strong>Reference genome:</strong> {{ variant.reference_genome }}</p>
         <p><strong>Transcript ID:</strong> {{ variant.transcript_id }}</p>
         <p><strong>Chromosome:</strong> {{ variant.chromosome }}</p>
@@ -17,24 +20,80 @@
         <p><strong>Alternate allele:</strong> {{ variant.alternate_allele }}</p>
         <p><strong>Disease association with reference allele:</strong> {{ variant.disease_association_with_ref_allele }}</p>
         <p><strong>Variant type:</strong> {{ variant.variant_type }}</p>
-        <p><strong>Gene:</strong> {{ variant.gene }}</p>
+        <p><strong>Gene:</strong><a href="{% routablepageurl page "selected_gene" gene=variant.gene.gene %}" title="View gene details"> {{ variant.gene }}</a></p>
     </div>
     <div class="col-12 p-5">
-
-        <table class="table table-hover table-striped">
+        <input id="custom_search_bar" type="text" class="form-control" type="text" placeholder="Local filter" aria-label="Local filter"/>
+        <table data-search-selector="#custom_search_bar" data-toggle="table" data-search="true" data-show-header="true" data-search-highlight = "true" data-search-accent-neutralise="true" data-height="220"  data-show-columns="true" data-pagination="true" class="table table-hover table-striped">
             <thead>
                 <tr>
-                    <th scope="col">Query prediction</th>
-                    <th scope="col">Query model</th>
+                    <th data-sortable="true" scope="col">Consequence terms</th>
+                    <th data-sortable="true" scope="col">Polyphen2 hvar score</th>
+                    <th data-sortable="true" scope="col">Polyphen2 hvar prediction</th>
+                    <th data-sortable="true" scope="col">SIFT score</th>
+                    <th data-sortable="true" scope="col">SIFT prediction</th>
+                    <th data-sortable="true" scope="col">SIFT4G score</th>
+                    <th data-sortable="true" scope="col">SIFT4G prediction</th>
+                    <th data-sortable="true" scope="col">FATHMM score</th>
+                    <th data-sortable="true" scope="col">FATHMM prediction</th>
+                    <th data-srtable="true" scope="col">CADD raw</th>
+                    <th data-sortable="true" scope="col">CADD phred</th>
+                    <th data-sortable="true" scope="col">MutationTaster effect prediction</th>
+                    <th data-sortable="true" scope="col">MutationTaster query model</th>
+                    <th data-sortable="true" scope="col">1000 Genomes global allele frequency</th>
+                    <th data-sortable="true" scope="col">1000 Genomes allele frequency EUR</th>                    
+                    <th data-sortable="true" scope="col">1000 Genomes allele frequency AFR</th>
+                    <th data-sortable="true" scope="col">1000 Genomes allele frequency AMR</th>
+                    <th data-sortable="true" scope="col">1000 Genomes allele frequency SAS</th>
+                    <th data-sortable="true" scope="col">1000 Genomes allele frequency EAS</th>
+                    <th data-sortable="true" scope="col">ExAC global allele frequency</th>
+                    <th data-sortable="true" scope="col">ExAC allele frequency NFE</th>
+                    <th data-sortable="true" scope="col">ExAC allele frequency AFR</th>
+                    <th data-sortable="true" scope="col">ExAC allele frequency AMR</th>
+                    <th data-srtable="true" scope="col">ExAC allele frequency EAS</th>
+                    <th data-sortable="true" scope="col">ExAC allele frequency SAS</th>
+                    <th data-sortable="true" scope="col">gnomAD global allele frequency</th>
+                    <th data-srtable="true" scope="col">gnomAD allele frequency AFR</th>
+                    <th data-sortable="true" scope="col">gnomAD allele frequency EAS</th>
                 </tr>
             </thead>
             <tbody>
-                {% for effect in variant.mt_vep.all%}
                 <tr>
-                    <td>{{effect.query_prediction}}</td>
-                    <td>{{effect.query_model}}</td>
-                </tr>
+                {% for effect in variant.ensembl_vep.all%}
+                    <td>{{effect.consequence_terms}}</td>
+                    <td>{{effect.polyphen2_hvar_score}}</td>
+                    <td>{{effect.polyphen2_hvar_pred}}</td>
+                    <td>{{effect.sift_score}}</td>
+                    <td>{{effect.sift_prediction}}</td>
+                    <td>{{effect.sift4g_score}}</td>
+                    <td>{{effect.sift4g_pred}}</td>
+                    <td>{{effect.fathmm_score}}</td>
+                    <td>{{effect.fathmm_pred}}</td>
+                    <td>{{effect.cadd_raw}}</td>
+                    <td>{{effect.cadd_phred}}</td>
+                {%endfor%}
+                {% for effect in variant.mt_vep.all%}
+                <td>{{effect.query_prediction}}</td>
+                <td>{{effect.query_model}}</td>
                 {% endfor %}
+                {% for effect in variant.ensembl_vep.all%}
+                <td>{{effect.af_1000gp3}}</td>
+                <td>{{effect.af_1000gp3_eur}}</td>
+                <td>{{effect.af_1000gp3_afr}}</td>
+                <td>{{effect.af_1000gp3_amr}}</td>
+                <td>{{effect.af_1000gp3_sas}}</td>
+                <td>{{effect.af_1000gp3_eas}}</td>
+                <td>{{effect.exac_adj_af}}</td>
+                <td>{{effect.exac_afr_af}}</td>
+                <td>{{effect.exac_amr_af}}</td>
+                <td>{{effect.exac_eas_af}}</td>
+                <td>{{effect.exac_nfe_af}}</td>
+                <td>{{effect.exac_sas_af}}</td>
+                <td>{{effect.gnomad_genomes_af}}</td>
+                <td>{{effect.gnomad_genomes_afr_af}}</td>
+                <td>{{effect.gnomad_genomes_eas_af}}</td>
+                {% endfor %}
+                </tr>
                 <!-- {% for variant in study.study_variants.all %}
                 {% endfor %} -->
             </tbody>
