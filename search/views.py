@@ -1,26 +1,108 @@
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Q
 from django.template.response import TemplateResponse
-
+from gene_details.models import GeneHpo
+from study_variants.models import StudyVariants
+from variant_details.models import VariantDetails
 from wagtail.core.models import Page
 from wagtail.search.models import Query
 
 
 def search(request):
-    search_query = request.GET.get("query", None)
     page = request.GET.get("page", 1)
 
-    # Search
-    if search_query:
-        search_results = Page.objects.live().search(search_query)
-        query = Query.get(search_query)
+    # Filters
+    condition_filter = (
+        StudyVariants.objects.all()
+        .values_list("condition", flat=True)
+        .distinct()
+        .order_by("condition")
+    )
 
-        # Record hit
-        query.add_hit()
-    else:
-        search_results = Page.objects.none()
+    condition_description_filter = (
+        StudyVariants.objects.all()
+        .values_list("condition_description", flat=True)
+        .distinct()
+        .order_by("condition_description")
+        .exclude(condition_description=None)
+    )
+
+    hpo_term_filter = (
+        GeneHpo.objects.all()
+        .values_list("name", flat=True)
+        .distinct()
+        .order_by("name")
+        .exclude(name=None)
+    )
+
+    # Filter_queries
+    search_query = request.GET.get("query", None)
+    condition_query = request.GET.getlist("condition_query", None)
+    condition_description_query = request.GET.get("condition_description_query", None)
+    p_value_query = request.GET.get("p_value_query", None)
+    odds_ratio_query = request.GET.get("odds_ratio_query", None)
+    pathogenic_query = request.GET.get("pathogenic_query", None)
+    deleterious_query = request.GET.get("deleterious_query", None)
+    rvis_query = request.GET.get("rvis_query", None)
+    hpo_query = request.GET.get("hpo_query", None)
+
+    # Search
+    search_results = VariantDetails.objects.live()
+    if condition_query:
+        search_results = search_results.filter(
+            Q(study_variants__condition__in=condition_query)
+        )
+    # if p_value_query and odds_ratio_query:
+    #     search_results = search_results.filter(
+    #         Q(study_variants__p_value__lt=0.05) | Q(study_variants__odds_ratio__gt=1)
+    #     )
+    if p_value_query:
+        search_results = search_results.filter(study_variants__p_value__lt=0.05)
+    if odds_ratio_query:
+        search_results = search_results.filter(study_variants__odds_ratio__gt=1)
+
+    # if pathogenic_query and deleterious_query:
+    #     search_results = search_results.filter(
+    #         Q(ensembl_vep__polyphen2_hvar_pred__contains="P")
+    #         | Q(ensembl_vep__sift_prediction__contains="pathogenic")
+    #         | Q(ensembl_vep__sift4g_pred__contains="P")
+    #         | Q(ensembl_vep__fathmm_pred__contains="P")
+    #         | Q(ensembl_vep__polyphen2_hvar_pred__contains="D")
+    #         | Q(ensembl_vep__sift_prediction__contains="deleterious")
+    #         | Q(ensembl_vep__sift4g_pred__contains="D")
+    #         | Q(ensembl_vep__fathmm_pred__contains="D")
+    #         | Q(mt_vep__query_prediction="disease causing")
+    #         | Q(mt_vep__query_prediction="disease causing automatic")
+    #     )
+
+    if pathogenic_query:
+        search_results = search_results.filter(
+            Q(ensembl_vep__polyphen2_hvar_pred__contains="P")
+            | Q(ensembl_vep__sift_prediction__contains="pathogenic")
+            | Q(ensembl_vep__sift4g_pred__contains="P")
+            | Q(ensembl_vep__fathmm_pred__contains="P")
+        )
+    if deleterious_query:
+        search_results = search_results.filter(
+            Q(mt_vep__query_prediction="disease causing")
+            | Q(mt_vep__query_prediction="disease causing automatic")
+            | Q(ensembl_vep__polyphen2_hvar_pred__contains="D")
+            | Q(ensembl_vep__sift_prediction__contains="deleterious")
+            | Q(ensembl_vep__sift4g_pred__contains="D")
+            | Q(ensembl_vep__fathmm_pred__contains="D")
+        )
+    if rvis_query:
+        search_results = search_results.filter(gene__rvis_score__lt=0)
+    # Change to elastic search
+    if condition_description_query:
+        search_results = search_results.filter(
+            study_variants__condition_description=condition_description_query
+        )
+    if hpo_query:
+        search_results = search_results.filter(gene__gene_hpo__name=hpo_query)
 
     # Pagination
-    paginator = Paginator(search_results, 10)
+    paginator = Paginator(search_results, 200)
     try:
         search_results = paginator.page(page)
     except PageNotAnInteger:
@@ -31,5 +113,11 @@ def search(request):
     return TemplateResponse(
         request,
         "search/search.html",
-        {"search_query": search_query, "search_results": search_results,},
+        {
+            "search_query": search_query,
+            "search_results": search_results,
+            "condition_filter": condition_filter,
+            "condition_description_filter": condition_description_filter,
+            "hpo_term_filter": hpo_term_filter,
+        },
     )

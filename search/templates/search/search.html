@@ -6,33 +6,115 @@
 {% block title %}Search{% endblock %}
 
 {% block content %}
-    <h1>Search</h1>
+<form method="get" class="p-5">
+    <h1>Customised filter</h1>
+    <p>Filter variant results by custom parameters</p>
+    <input type="text" class="w-100" name="query" placeholder="Global search" />
+    <div class="accordion" id="search-filters">
+        <div class="accordion-item">
+            <div class="accordion-header" data-bs-toggle="collapse" data-bs-target="#filter-queries">
+                <button type="button" class="btn btn-primary btn-sm">
+                    More filters
+                </button>
+            </div>
+            <div class="accordion-collapse collapse row" data-bs-parent="#search-filters" id="filter-queries">
+                <fieldset class="col-3">
+                    <div class="form-group">
+                        <legend class="mt-4">Condition</legend>
+                        {% for condition in condition_filter %}
+                        <div class="form-check">
+                            <input name="condition_query" type="checkbox" class="form-check-input"
+                                id="condition-{{forloop.counter}}" value={{condition}} />
+                            <label class="form-check-label" for="condition-{{forloop.counter}}">{{condition}}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+                <fieldset class="col-3">
+                    <div class="form-group">
+                        <legend class="mt-4">Statistical association of variant with condition</legend>
+                        <div class="form-check">
+                            <input name="p_value_query" type="checkbox" class="form-check-input" id="flexCheckDefault1"
+                                value="" />
+                            <label class="form-check-label" for="flexCheckDefault1"> P-value &lt;0.05 </label>
+                        </div>
+                        <div class="form-check">
+                            <input name="odds_ratio_query" type="checkbox" class="form-check-input"
+                                id="flexCheckDefault2" value="" />
+                            <label class="form-check-label" for="flexCheckDefault2">Odds ratio &gt;1</label>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="col-3">
+                    <legend class="mt-4">Variant effect prediction</legend>
+                    <div class="form-check">
+                        <input name="pathogenic_query" class="form-check-input" type="checkbox"
+                            id="flexCheckDefault3" />
+                        <label class="form-check-label" for="flexCheckDefault3">Pathogenic</label>
+                    </div>
+                    <div class="form-check">
+                        <input name="deleterious_query" class="form-check-input" type="checkbox"
+                            id="flexCheckDefault4" />
+                        <label class="form-check-label" for="flexCheckDefault4">Deleterious</label>
+                    </div>
+                </fieldset>
+                <fieldset class="form-group col-3">
+                    <legend class="mt-4">Genic intolerance to variation</legend>
+                    <div class="form-check">
+                        <input name="rvis_query" type="checkbox" class="form-check-input" id="flexCheckDefault4"
+                            value="" />
+                        <label class="form-check-label" for="flexCheckDefault4">RVIS score &lt;0</label>
+                    </div>
+                </fieldset>
+                <fieldset class="form-group col-6">
+                    <div class="pb-4 form-group">
+                        <legend for="exampleSelect2" class="form-label mt-4">Condition description
+                            with gene</legend>
+                        <select name="hpo_query" multiple="" class="form-select" id="exampleSelect2">
+                            {% for hpo_term in hpo_term_filter %}
+                            <option>{{hpo_term}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </fieldset>
+                <fieldset class="form-group col-6">
+                    <div class="pb-4 form-group">
+                        <legend for="exampleSelect2" class="form-label mt-4">HPO terms associated
+                            with gene</legend>
+                        <select name="hpo_query" multiple="" class="form-select" id="exampleSelect2">
+                            {% for hpo_term in hpo_term_filter %}
+                            <option>{{hpo_term}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
 
-    <form action="{% url 'search' %}" method="get">
-        <input type="text" name="query"{% if search_query %} value="{{ search_query }}"{% endif %}>
-        <input type="submit" value="Search" class="button">
-    </form>
-
-    {% if search_results %}
-        <ul>
-            {% for result in search_results %}
-                <li>
-                    <h4><a href="{% pageurl result %}">{{ result }}</a></h4>
-                    {% if result.search_description %}
-                        {{ result.search_description }}
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-
-        {% if search_results.has_previous %}
-            <a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.previous_page_number }}">Previous</a>
+{% if search_results %}
+<ul>
+    {% for result in search_results %}
+    <li>
+        <h4><a href="{% pageurl result %}">{{ result }}</a></h4>
+        {% if result.search_description %}
+        {{ result.search_description }}
         {% endif %}
+    </li>
+    {% endfor %}
+</ul>
 
-        {% if search_results.has_next %}
-            <a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.next_page_number }}">Next</a>
-        {% endif %}
-    {% elif search_query %}
-        No results found
-    {% endif %}
+{% if search_results.has_previous %}
+<a
+    href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.previous_page_number }}">Previous</a>
+{% endif %}
+
+{% if search_results.has_next %}
+<a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.next_page_number }}">Next</a>
+{% endif %}
+{% elif search_query %}
+No results found
+{% endif %}
 {% endblock %}
