@@ -24,7 +24,8 @@
                         {% for condition in condition_filter %}
                         <div class="form-check">
                             <input name="condition_query" type="checkbox" class="form-check-input"
-                                id="condition-{{forloop.counter}}" value={{condition}} />
+                                id="condition-{{forloop.counter}}" value="{{condition}}"
+                                {%if condition in condition_query%} checked {%endif%} />
                             <label class="form-check-label" for="condition-{{forloop.counter}}">{{condition}}</label>
                         </div>
                         {% endfor %}
@@ -35,12 +36,12 @@
                         <legend class="mt-4">Statistical association of variant with condition</legend>
                         <div class="form-check">
                             <input name="p_value_query" type="checkbox" class="form-check-input" id="flexCheckDefault1"
-                                value="" />
+                                value="1" {%if p_value_query%} checked {%endif%} />
                             <label class="form-check-label" for="flexCheckDefault1"> P-value &lt;0.05 </label>
                         </div>
                         <div class="form-check">
                             <input name="odds_ratio_query" type="checkbox" class="form-check-input"
-                                id="flexCheckDefault2" value="" />
+                                id="flexCheckDefault2" value="1" {%if odds_ratio_query%} checked {%endif%} />
                             <label class="form-check-label" for="flexCheckDefault2">Odds ratio &gt;1</label>
                         </div>
                     </div>
@@ -48,13 +49,13 @@
                 <fieldset class="col-3">
                     <legend class="mt-4">Variant effect prediction</legend>
                     <div class="form-check">
-                        <input name="pathogenic_query" class="form-check-input" type="checkbox"
-                            id="flexCheckDefault3" />
+                        <input name="pathogenic_query" class="form-check-input" type="checkbox" id="flexCheckDefault3"
+                            value="1" {%if pathogenic_query%} checked {%endif%} />
                         <label class="form-check-label" for="flexCheckDefault3">Pathogenic</label>
                     </div>
                     <div class="form-check">
-                        <input name="deleterious_query" class="form-check-input" type="checkbox"
-                            id="flexCheckDefault4" />
+                        <input name="deleterious_query" class="form-check-input" type="checkbox" id="flexCheckDefault4"
+                            value="1" {%if deleterious_query%} checked {%endif%} />
                         <label class="form-check-label" for="flexCheckDefault4">Deleterious</label>
                     </div>
                 </fieldset>
@@ -62,17 +63,17 @@
                     <legend class="mt-4">Genic intolerance to variation</legend>
                     <div class="form-check">
                         <input name="rvis_query" type="checkbox" class="form-check-input" id="flexCheckDefault4"
-                            value="" />
+                            value="1" {%if rvis_query%} checked {%endif%} />
                         <label class="form-check-label" for="flexCheckDefault4">RVIS score &lt;0</label>
                     </div>
                 </fieldset>
                 <fieldset class="form-group col-6">
                     <div class="pb-4 form-group">
-                        <legend for="exampleSelect2" class="form-label mt-4">Condition description
-                            with gene</legend>
-                        <select name="hpo_query" multiple="" class="form-select" id="exampleSelect2">
-                            {% for hpo_term in hpo_term_filter %}
-                            <option>{{hpo_term}}</option>
+                        <legend for="exampleSelect2" class="form-label mt-4">Condition description</legend>
+                        <select name="condition_description_query" multiple="" class="form-select" id="exampleSelect2">
+                            {% for condition_description in condition_description_filter %}
+                            <option {%if condition_description in condition_description_query%} selected {%endif%}>
+                                {{condition_description}}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -83,7 +84,7 @@
                             with gene</legend>
                         <select name="hpo_query" multiple="" class="form-select" id="exampleSelect2">
                             {% for hpo_term in hpo_term_filter %}
-                            <option>{{hpo_term}}</option>
+                            <option {%if hpo_term in hpo_query%} selected {%endif%}>{{hpo_term}}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -114,7 +115,7 @@
 {% if search_results.has_next %}
 <a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.next_page_number }}">Next</a>
 {% endif %}
-{% elif search_query %}
+{% else %}
 No results found
 {% endif %}
 {% endblock %}
