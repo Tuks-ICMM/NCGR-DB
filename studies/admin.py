@@ -1,6 +1,6 @@
 from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
-from .models import Studies
 
+from .models import Studies
 
 # Register your models here.
 
@@ -15,10 +15,12 @@ class StudiesAdmin(ModelAdmin):
     list_display = (
         "papers",
         "doi",
+        "study_population_description"
     )
     search_fields = (
         "papers",
         "doi",
+        "study_population_description"
     )
 
 

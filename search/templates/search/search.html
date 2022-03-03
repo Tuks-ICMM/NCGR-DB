@@ -1,36 +1,69 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags %}
+{% load static wagtailcore_tags wagtailimages_tags wagtailroutablepage_tags %}
+
 
 {% block body_class %}template-searchresults{% endblock %}
 
 {% block title %}Search{% endblock %}
 
 {% block content %}
+
+
+
 <form method="get" class="p-5">
     <h1>Customised filter</h1>
-    <p>Filter variant results by custom parameters</p>
-    <input type="text" class="w-100" name="query" placeholder="Global search" />
+    <p>Filter results by custom parameters</p>
+    <div id="builder"></div>
+    {% comment %} <input type="text" class="w-100" name="query" placeholder="Global search" />
     <div class="accordion" id="search-filters">
-        <div class="accordion-item">
+        <div class="accordion-item my-1">
             <div class="accordion-header" data-bs-toggle="collapse" data-bs-target="#filter-queries">
-                <button type="button" class="btn btn-primary btn-sm">
+                <button type="button" class="w-100 btn btn-primary btn-sm">
                     More filters
                 </button>
             </div>
             <div class="accordion-collapse collapse row" data-bs-parent="#search-filters" id="filter-queries">
                 <fieldset class="col-3">
                     <div class="form-group">
-                        <legend class="mt-4">Condition</legend>
-                        {% for condition in condition_filter %}
+                        <legend class="mt-4"> Gene reported in NESHIE, CP or NESHIE-caused CP</legend>
                         <div class="form-check">
-                            <input name="condition_query" type="checkbox" class="form-check-input"
-                                id="condition-{{forloop.counter}}" value="{{condition}}"
-                                {%if condition in condition_query%} checked {%endif%} />
-                            <label class="form-check-label" for="condition-{{forloop.counter}}">{{condition}}</label>
+                            <input name="NESHIE_query" type="checkbox" class="form-check-input" id="condition-NESHIE"
+                                value="1" {%if NESHIE_query%} checked {%endif%} />
+                            <label class="form-check-label" for="condition-NESHIE">NESHIE</label>
                         </div>
-                        {% endfor %}
+                        <div class="form-check">
+                            <input name="NESHIE_CP_query" type="checkbox" class="form-check-input"
+                                id="condition-NESHIE-CP" value="1" {%if NESHIE_CP_query%} checked {%endif%} />
+                            <label class="form-check-label" for="condition-NESHIE">NESHIE-caused CP</label>
+                        </div>
+                        <div class="form-check">
+                            <input name="CP_query" type="checkbox" class="form-check-input" id="condition-CP" value="1"
+                                {%if CP_query%} checked {%endif%} />
+                            <label class="form-check-label" for="condition-CP">CP</label>
+                        </div>
                     </div>
                 </fieldset>
+                <fieldset class="col-2 mt-4">
+                    <div class="form-group">
+                        <select name="operator_1" class="form-select" id="operator_1">
+                            <option>AND</option>
+                            <option>OR</option>
+                        </select>
+                    </div>
+                </fieldset>
+                <fieldset class="col-3">
+                    <div class="pb-4 form-group">
+                        <legend for="exampleSelect2" class="form-label mt-4">Gene association with other disease
+                            phenotypes
+                        </legend>
+                        <select name="hpo_query" multiple="" class="form-select" id="exampleSelect2">
+                            {% for hpo_term in hpo_term_filter %}
+                            <option {%if hpo_term in hpo_query%} selected {%endif%}>{{hpo_term}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </fieldset>
+                <div class="pb-4"><span class="badge bg-primary">AND</span></div>
                 <fieldset class="col-3">
                     <div class="form-group">
                         <legend class="mt-4">Statistical association of variant with condition</legend>
@@ -46,6 +79,14 @@
                         </div>
                     </div>
                 </fieldset>
+                <fieldset class="col-2 mt-4">
+                    <div class="form-group">
+                        <select name="operator_2" class="form-select" id="operator_2">
+                            <option>AND</option>
+                            <option>OR</option>
+                        </select>
+                    </div>
+                </fieldset>
                 <fieldset class="col-3">
                     <legend class="mt-4">Variant effect prediction</legend>
                     <div class="form-check">
@@ -59,7 +100,15 @@
                         <label class="form-check-label" for="flexCheckDefault4">Deleterious</label>
                     </div>
                 </fieldset>
-                <fieldset class="form-group col-3">
+                <fieldset class="col-2 mt-4">
+                    <div class="form-group">
+                        <select name="operator_3" class="form-select" id="operator_3">
+                            <option>AND</option>
+                            <option>OR</option>
+                        </select>
+                    </div>
+                </fieldset>
+                <fieldset class="form-group col-2">
                     <legend class="mt-4">Genic intolerance to variation</legend>
                     <div class="form-check">
                         <input name="rvis_query" type="checkbox" class="form-check-input" id="flexCheckDefault4"
@@ -67,55 +116,163 @@
                         <label class="form-check-label" for="flexCheckDefault4">RVIS score &lt;0</label>
                     </div>
                 </fieldset>
-                <fieldset class="form-group col-6">
-                    <div class="pb-4 form-group">
-                        <legend for="exampleSelect2" class="form-label mt-4">Condition description</legend>
-                        <select name="condition_description_query" multiple="" class="form-select" id="exampleSelect2">
-                            {% for condition_description in condition_description_filter %}
-                            <option {%if condition_description in condition_description_query%} selected {%endif%}>
-                                {{condition_description}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </fieldset>
-                <fieldset class="form-group col-6">
-                    <div class="pb-4 form-group">
-                        <legend for="exampleSelect2" class="form-label mt-4">HPO terms associated
-                            with gene</legend>
-                        <select name="hpo_query" multiple="" class="form-select" id="exampleSelect2">
-                            {% for hpo_term in hpo_term_filter %}
-                            <option {%if hpo_term in hpo_query%} selected {%endif%}>{{hpo_term}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </fieldset>
             </div>
         </div>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    </div> {% endcomment %}
+    <button type="submit" class="btn btn-success btn-sm">Submit</button>
 </form>
+<div class="px-5">
+    {% if search_results %}
+    <div class="pt-3">
+        <h1>Results</h1>
+    </div>
+    <div class="col-12">
+        <table data-toggle="table" data-search="true" data-show-header="true" data-search-highlight="true"
+            data-search-accent-neutralise="true" data-height="560" data-show-columns="true" data-pagination="true"
+            class="table table-hover table-striped">
+            <thead data-sticky-header="true" data-sticky-header-offset-y="60">
+                <tr>
+                    <th data-sortable="true" scope="col">Condition</th>
+                    <th data-sortable="true" scope="col">Variant identifier (dbSNP or HGVS)</th>
+                    <th data-sortable="true" scope="col">Reference genome</th>
+                    <th data-sortable="true" scope="col">Transcript ID</th>
+                    <th data-sortable="true" scope="col">Chromosome</th>
+                    <th data-sortable="true" scope="col">Genomic start position</th>
+                    <th data-sortable="true" scope="col">Genomic end position</th>
+                    <th data-sortable="true" scope="col">Reference allele</th>
+                    <th data-sortable="true" scope="col">Alternate allele</th>
+                    <th data-sortable="true" scope="col">Variant type</th>
+                    <th data-sortable="true" scope="col">Gene</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in search_results %}
+                <tr class="cursor-pointer clickable" onclick="location.href='{% pageurl result %}'"
+                    title="View variant effect predictions">
+                    <td>{{result.study_variants}}</td>
+                    <td><a href="{% pageurl result %}" title="View variant effect predictions">{{result}}</a></td>
+                    <td>{{ result.reference_genome }}</td>
+                    <td>{{ result.transcript_id }}</td>
+                    <td>{{ result.chromosome }}</td>
+                    <td>{{ result.genomic_start_position }}</td>
+                    <td>{{ result.genomic_end_position }}</td>
+                    <td>{{ result.reference_allele }}</td>
+                    <td>{{ result.alternate_allele }}</td>
+                    <td>{{ result.variant_type }}</td>
+                    <td><a href="{% pageurl result.gene %}" title="View gene details">{{ result.gene }}</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% comment %} <ul>
+            {% for result in search_results %}
+            <li>
+                <h4><a href="{% pageurl result %}">{{ result }}</a></h4>
+            </li>
+            {% endfor %}
+        </ul> {% endcomment %}
 
-{% if search_results %}
-<ul>
-    {% for result in search_results %}
-    <li>
-        <h4><a href="{% pageurl result %}">{{ result }}</a></h4>
-        {% if result.search_description %}
-        {{ result.search_description }}
+        {% comment %} {% if search_results.has_previous %}
+        <a
+            href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.previous_page_number }}">Previous</a>
         {% endif %}
-    </li>
-    {% endfor %}
-</ul>
 
-{% if search_results.has_previous %}
-<a
-    href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.previous_page_number }}">Previous</a>
-{% endif %}
+        {% if search_results.has_next %}
+        <a
+            href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.next_page_number }}">Next</a>
+        {% endif %} {% endcomment %}
+        {% else %}
+        No results found
+        {% endif %}
+    </div>
+</div>
 
-{% if search_results.has_next %}
-<a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.next_page_number }}">Next</a>
-{% endif %}
-{% else %}
-No results found
-{% endif %}
+{% endblock %}
+{% block extra_js %}
+<script type="text/javascript">
+    const filter_options = {
+        allow_empty: true,
+        select_placeholder: "Select parameter",
+        filters: [{
+            id: 'Condition',
+            label: 'Condition',
+            type: 'integer',
+            input: 'checkbox',
+            operators: ['equal', 'not_equal'],
+            values: [{
+                value: 1,
+                label: "NESHIE"
+            }, {
+                value: 1,
+                label: "NESHIE-caused CP"
+            }, {
+                value: 1,
+                label: "CP"
+            }]
+
+        }, {
+            id: 'Gene HPO',
+            label: 'Gene human phenotype ontology',
+            type: 'string',
+            input: 'text',
+            operators: ['contains', 'equal', 'not_equal'],
+            placeholder: 'Enter a valid HPO term here ',
+            size: 40
+        }, {
+            id: 'P-value',
+            label: 'P-value',
+            type: 'integer',
+            input: 'select',
+            operators: ['equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal'],
+            values: [{
+                value: 1,
+                label: 0.05
+            }, {
+                value: 1,
+                label: 0.001
+            }]
+        }, {
+            id: 'Odds ratio',
+            label: 'Odds ratio',
+            type: 'integer',
+            input: 'select',
+            operators: ['equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal'],
+            values: [{
+                value: 1,
+                label: 1
+            }, {
+                value: 1,
+                label: 2
+            }]
+        }, {
+            id: 'Predicted variant effect',
+            label: 'Predicted variant effect',
+            type: 'integer',
+            input: 'checkbox',
+            operators: ['equal', 'not_equal'],
+            values: [{
+                value: 1,
+                label: 'Pathogenic'
+            }, {
+                value: 1,
+                label: 'Likely pathogenic'
+            }, {
+                value: 1,
+                label: 'Deleterious'
+            }]
+        }, {
+            id: 'RVIS',
+            label: 'Gene residual variation intolerance score',
+            type: 'integer',
+            input: 'select',
+            operators: ['equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal'],
+            values: [{
+                value: 1,
+                label: 1
+            }]
+        }, ]
+    };
+
+    $('#builder').queryBuilder(filter_options);
+</script>
 {% endblock %}

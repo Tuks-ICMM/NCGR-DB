@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "studies",
     "study_variants",
     "variant_details",
+    "advanced_filters",
     "wagtail.contrib.routable_page",
     "wagtail.contrib.forms",
     "wagtail.contrib.modeladmin",

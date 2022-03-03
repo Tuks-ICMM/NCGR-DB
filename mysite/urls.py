@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.conf.urls import url
 from django.contrib import admin
 from django.urls import include, path
 from gene_details import views as gene_views
@@ -30,6 +31,10 @@ if settings.DEBUG:
     urlpatterns += staticfiles_urlpatterns()
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+# Add django-advanced-filters urls
+urlpatterns = urlpatterns + [
+    url(r"^advanced_filters/", include("advanced_filters.urls"))
+]
 urlpatterns = urlpatterns + [
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in

@@ -29,17 +29,19 @@ def search(request):
         .exclude(condition_description=None)
     )
 
-    hpo_term_filter = (
+    hpo_term_filter = list(
         GeneHpo.objects.all()
-        .values_list("name", flat=True)
         .distinct()
         .order_by("name")
         .exclude(name=None)
+        .values_list("name", flat=True)
     )
 
     # Filter_queries
     search_query = request.GET.get("query", None)
-    condition_query = request.GET.getlist("condition_query", None)
+    CP_query = request.GET.get("CP_query", None)
+    NESHIE_query = request.GET.get("NESHIE_query", None)
+    NESHIE_CP_query = request.GET.get("NESHIE_query", None)
     condition_description_query = request.GET.getlist(
         "condition_description_query", None
     )
@@ -53,15 +55,60 @@ def search(request):
     # Search
 
     search_results = VariantDetails.objects.live()
-    if condition_query:
+    if NESHIE_CP_query and NESHIE_query and CP_query:
         search_results = search_results.filter(
-            Q(study_variants__condition__in=condition_query)
+            Q(study_variants__condition_description__contains="HIE")
+            | Q(study_variants__condition_description__contains="Asphyxia")
+            | Q(
+                study_variants__condition_description__contains="Neonatal encephalopathy"
+            )
+            | Q(study_variants__condition__contains="HIE")
+            | Q(study_variants__condition__contains="CP")
+        )
+    elif NESHIE_CP_query and NESHIE_query and not CP_query:
+        search_results = search_results.filter(
+            Q(study_variants__condition_description__contains="HIE")
+            | Q(study_variants__condition_description__contains="Asphyxia")
+            | Q(
+                study_variants__condition_description__contains="Neonatal encephalopathy"
+            )
+            | Q(study_variants__condition__contains="HIE")
+        )
+    elif NESHIE_CP_query and CP_query and not NESHIE_query:
+        search_results = search_results.filter(
+            Q(study_variants__condition_description__contains="HIE")
+            | Q(study_variants__condition_description__contains="Asphyxia")
+            | Q(
+                study_variants__condition_description__contains="Neonatal encephalopathy"
+            )
+            | Q(study_variants__condition__contains="CP")
+        )
+    elif NESHIE_query and CP_query and not NESHIE_CP_query:
+        search_results = search_results.filter(
+            Q(study_variants__condition__contains="HIE")
+            | Q(study_variants__condition__contains="CP")
+        )
+    elif NESHIE_CP_query and not CP_query and not NESHIE_query:
+        search_results = search_results.filter(
+            Q(study_variants__condition_description__contains="HIE")
+            | Q(study_variants__condition_description__contains="Asphyxia")
+            | Q(
+                study_variants__condition_description__contains="Neonatal encephalopathy"
+            )
+        )
+    elif NESHIE_query and not CP_query and not NESHIE_CP_query:
+        search_results = search_results.filter(
+            Q(study_variants__condition__contains="HIE")
+        )
+    elif CP_query and not NESHIE_query and not NESHIE_CP_query:
+        search_results = search_results.filter(
+            Q(study_variants__condition__contains="CP")
         )
     if p_value_query and odds_ratio_query:
-search_results = search_results.filter(
-    Q(study_variants__p_value__lt=Decimal("0.05"))
-    | Q(study_variants__odds_ratio__gt=Decimal("1"))
-)
+        search_results = search_results.filter(
+            Q(study_variants__p_value__lt=Decimal("0.05"))
+            | Q(study_variants__odds_ratio__gt=Decimal("1"))
+        )
 
     elif p_value_query and not odds_ratio_query:
         search_results = search_results.filter(
@@ -130,7 +177,6 @@ search_results = search_results.filter(
             "condition_filter": condition_filter,
             "condition_description_filter": condition_description_filter,
             "hpo_term_filter": hpo_term_filter,
-            "condition_query": condition_query,
             "condition_description_query": condition_description_query,
             "p_value_query": p_value_query,
             "odds_ratio_query": odds_ratio_query,
@@ -138,5 +184,8 @@ search_results = search_results.filter(
             "deleterious_query": deleterious_query,
             "rvis_query": rvis_query,
             "hpo_query": hpo_query,
+            "NESHIE_query": NESHIE_query,
+            "NESHIE_CP_query": NESHIE_CP_query,
+            "CP_query": CP_query,
         },
     )
