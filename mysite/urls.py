@@ -33,7 +33,7 @@ if settings.DEBUG:
 
 # Add django-advanced-filters urls
 urlpatterns = urlpatterns + [
-    url(r"^advanced_filters/", include("advanced_filters.urls"))
+    # url(r"^advanced_filters/", include("advanced_filters.urls"))
 ]
 urlpatterns = urlpatterns + [
     # For anything not caught by a more specific rule above, hand over to

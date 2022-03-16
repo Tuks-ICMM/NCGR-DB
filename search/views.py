@@ -1,3 +1,4 @@
+import json
 from decimal import Decimal
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -38,8 +39,7 @@ def search(request):
     )
 
     # Filter_queries
-    complex_filter_query = request.GET.get("complex_filter_query", None)
-    print(complex_filter_query)
+    complex_filter_query = json.loads(request.GET.get("complex_filter_query", None))
     search_query = request.GET.get("query", None)
     CP_query = request.GET.get("CP_query", None)
     NESHIE_query = request.GET.get("NESHIE_query", None)
@@ -55,6 +55,77 @@ def search(request):
     hpo_query = request.GET.getlist("hpo_query", None)
 
     # Search
+    if complex_filter_query["condition"] == "AND":
+        filter_rules = list()
+        for rule in complex_filter_query["rules"]:
+            if rule["id"] == "Condition":
+                if rule["value"] == "NESHIE":
+                    filter_rules.append(Q(study_variants__condition__contains="HIE"))
+                elif rule["value"] == "NESHIE-caused CP":
+                    filter_rules.append(
+                        Q(study_variants__condition_description__contains="HIE")
+                        | Q(study_variants__condition_description__contains="Asphyxia")
+                        | Q(
+                            study_variants__condition_description__contains="Neonatal encephalopathy"
+                        )
+                    )
+                elif rule["value"] == "CP":
+                    filter_rules.append(Q(study_variants__condition__contains="CP"))
+            elif rule["id"] == "P-value":
+                if rule["operator"] == "less":
+                    filter_rules.append(
+                        Q(study_variants__p_value__lt=Decimal(rule["value"]))
+                    )
+                elif rule["operator"] == "greater":
+                    filter_rules.append(
+                        Q(study_variants__p_value__gt=Decimal(rule["value"]))
+                    )
+                elif rule["operator"] == "less or equal":
+                    filter_rules.append(
+                        Q(study_variants__p_value__lte=Decimal(rule["value"]))
+                    )
+                elif rule["operator"] == "greater or equal":
+                    filter_rules.append(
+                        Q(study_variants__p_value__lte=Decimal(rule["value"]))
+                    )
+                elif rule["operator"] == "equal":
+                    filter_rules.append(
+                        Q(study_variants__p_value=Decimal(rule["value"]))
+                    )
+            elif rule["id"] == "Odds ratio":
+                if rule["operator"] == "less":
+                    filter_rules.append(
+                        Q(study_variants__odds_ratio__lt=Decimal(rule["value"]))
+                    )
+                elif rule["operator"] == "greater":
+                    filter_rules.append(
+                        Q(study_variants__odds_ratio__gt=Decimal(rule["value"]))
+                    )
+                elif rule["operator"] == "less or equal":
+                    filter_rules.append(
+                        Q(study_variants__odds_ratio__lte=Decimal(rule["value"]))
+                    )
+                elif rule["operator"] == "greater or equal":
+                    filter_rules.append(
+                        Q(study_variants__odds_ratio__lte=Decimal(rule["value"]))
+                    )
+                elif rule["operator"] == "equal":
+                    filter_rules.append(
+                        Q(study_variants__odds_ratio=Decimal(rule["value"]))
+                    )
+            elif rule["id"] == "Predicted variant effect":
+                if rule["operator"] == "equal":
+                    if rule["value"] == "Pathogenic":
+                        filter_rules.append(
+                            Q(ensembl_vep__polyphen2_hvar_pred__contains="P")
+                            | Q(ensembl_vep__sift_prediction__contains="pathogenic")
+                            | Q(ensembl_vep__sift4g_pred__contains="P")
+                            | Q(ensembl_vep__fathmm_pred__contains="P")
+                        )
+                elif rule["operator"] == "not_equal":
+                    filter_rules.append(
+                        Q(study_variants__odds_ratio=Decimal(rule["value"]))
+                    )
 
     search_results = VariantDetails.objects.live()
     if NESHIE_CP_query and NESHIE_query and CP_query:
@@ -189,6 +260,8 @@ def search(request):
             "NESHIE_query": NESHIE_query,
             "NESHIE_CP_query": NESHIE_CP_query,
             "CP_query": CP_query,
-            "complex_filter_query": complex_filter_query,
+            "complex_filter_query": json.dumps(complex_filter_query)
+            if complex_filter_query
+            else json.dumps(dict()),
         },
     )
