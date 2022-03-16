@@ -38,6 +38,8 @@ def search(request):
     )
 
     # Filter_queries
+    complex_filter_query = request.GET.get("complex_filter_query", None)
+    print(complex_filter_query)
     search_query = request.GET.get("query", None)
     CP_query = request.GET.get("CP_query", None)
     NESHIE_query = request.GET.get("NESHIE_query", None)
@@ -187,5 +189,6 @@ def search(request):
             "NESHIE_query": NESHIE_query,
             "NESHIE_CP_query": NESHIE_CP_query,
             "CP_query": CP_query,
+            "complex_filter_query": complex_filter_query,
         },
     )

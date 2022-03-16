@@ -14,6 +14,8 @@
     <h1>Customised filter</h1>
     <p>Filter results by custom parameters</p>
     <div id="builder"></div>
+    <input id='complex_filter_query' type='text' class='d-none' name='complex_filter_query'
+        value='{{complex_filter_query}}' />
     {% comment %} <input type="text" class="w-100" name="query" placeholder="Global search" />
     <div class="accordion" id="search-filters">
         <div class="accordion-item my-1">
@@ -119,7 +121,7 @@
             </div>
         </div>
     </div> {% endcomment %}
-    <button type="submit" class="btn btn-success btn-sm">Submit</button>
+    <button id="filter_button" type="submit" class="btn btn-success btn-lrg">Submit</button>
 </form>
 <div class="px-5">
     {% if search_results %}
@@ -190,6 +192,7 @@
 {% endblock %}
 {% block extra_js %}
 <script type="text/javascript">
+    const complex_filter_query_persist = JSON.parse('{{complex_filter_query}}');
     const filter_options = {
         allow_empty: true,
         select_placeholder: "Select parameter",
@@ -197,22 +200,22 @@
             id: 'Condition',
             label: 'Condition',
             type: 'integer',
-            input: 'checkbox',
+            input: 'radio',
             operators: ['equal', 'not_equal'],
             values: [{
-                value: 1,
+                value: 'NESHIE',
                 label: "NESHIE"
             }, {
-                value: 1,
+                value: 'NESHIE-caused CP',
                 label: "NESHIE-caused CP"
             }, {
-                value: 1,
+                value: 'CP',
                 label: "CP"
             }]
 
         }, {
             id: 'Gene HPO',
-            label: 'Gene human phenotype ontology',
+            label: 'Gene human phenotype ontology (HPO)',
             type: 'string',
             input: 'text',
             operators: ['contains', 'equal', 'not_equal'],
@@ -248,21 +251,21 @@
             id: 'Predicted variant effect',
             label: 'Predicted variant effect',
             type: 'integer',
-            input: 'checkbox',
+            input: 'radio',
             operators: ['equal', 'not_equal'],
             values: [{
-                value: 1,
+                value: 'Pathogenic',
                 label: 'Pathogenic'
             }, {
-                value: 1,
+                value: 'Likely pathogenic',
                 label: 'Likely pathogenic'
             }, {
-                value: 1,
+                value: 'Deleterious',
                 label: 'Deleterious'
             }]
         }, {
             id: 'RVIS',
-            label: 'Gene residual variation intolerance score',
+            label: 'Gene residual variation intolerance score (RVIS)',
             type: 'integer',
             input: 'select',
             operators: ['equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal'],
@@ -274,5 +277,15 @@
     };
 
     $('#builder').queryBuilder(filter_options);
+
+    $('#filter_button').on('click', function (event) {
+        //event.preventDefault();
+        let filter_parameters = $('#builder').queryBuilder('getRules');
+        $('#complex_filter_query').val(JSON.stringify(filter_parameters));
+        //console.log($('#complex_filter_query').val());
+    });
+    if (complex_filter_query_persist) {
+        $('#builder').queryBuilder('setRules', complex_filter_query_persist)
+    }
 </script>
 {% endblock %}

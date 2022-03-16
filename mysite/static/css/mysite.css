@@ -2,6 +2,10 @@
     cursor: pointer;
   } */
 
+#custom_search_bar {
+  margin-bottom: 100px;
+}
+
 .sticky-top th {
   position: sticky;
   background: white;
@@ -9,7 +13,7 @@
 }
 
 .body-panel {
-  background-color:white;
+  background-color: white;
 }
 
 table thead.sticky-top {
@@ -18,4 +22,13 @@ table thead.sticky-top {
 
 table tr.cursor-pointer {
   z-index: 99;
+}
+
+#builder_group_0 {
+  border: none;
+  background: rgba(240, 239, 237, 0.5);
+}
+
+.btn-group {
+  background: rgba(240, 239, 237, 0.5);
 }

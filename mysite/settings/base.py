@@ -67,6 +67,11 @@ MIDDLEWARE = [
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
 
+GRAPH_MODELS = {
+    "all_applications": True,
+    "group_models": True,
+}
+
 ROOT_URLCONF = "mysite.urls"
 
 TEMPLATES = [

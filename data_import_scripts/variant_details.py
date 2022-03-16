@@ -1,5 +1,6 @@
 import pandas as pd
 
+from gene_details.models import GeneDetails
 from variant_details.models import VariantDetails
 
 f = pd.read_excel(
@@ -56,6 +57,8 @@ f = (
 ) 
 
 f.loc[:,"Disease_association_with_ref_allele"] = f.loc[:,"Disease_association_with_ref_allele"].astype(bool)
+
+# Update existing database entries
 for index, row in f.iterrows():
     a = VariantDetails.objects.filter(title=row["Variant_name"])
     if a.exists():
@@ -68,3 +71,40 @@ for index, row in f.iterrows():
     else:
         print("No corresponding gene name")
         print(row)
+
+# Updating database with new entries with new excel spreadsheet
+
+import pandas as pd
+
+parent_page = VariantDetailsIndexPage.objects.get(title="Variant details")
+
+f = pd.read_excel(
+    "C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/Data_import/13122021_Online_DB_MAR.xlsx", sheet_name='Variant_details'
+)
+
+for index, row in f.iterrows():
+    a = GeneDetails.objects.filter(title=row["Gene"])
+    b = VariantDetails.objects.filter(title=row["Variant_name"])
+    if a.exists() and not b.exists():
+        print ("missing entry")
+        s = VariantDetails()
+        s.title = row["Variant_name"]
+        s.gene = a[0]
+        s.variant_name = row["Variant_name"]
+        s.reference_genome = row["Reference_genome"]
+        s.transcript_id = row["Transcript_ID"]
+        s.chromosome = row["Chromosome"]
+        s.genomic_start_position = row["Genomic_start_position"]
+        s.genomic_end_position = row["Genomic_end_position"]
+        s.reference_allele = row["Reference_allele"]
+        s.alternate_allele = row["Alternate_allele"]
+        s.disease_association_with_ref_allele = row[
+            "Disease_association_with_ref_allele"
+        ]
+        s.variant_type = row["Variant_type"]
+        parent_page.add_child(instance=s)
+        print(s)
+    else:
+        print("Entry already exists")
+        print(row)
+

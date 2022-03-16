@@ -61,3 +61,44 @@ for index, row in f.iterrows():
 else:
     print("No corresponding study or variant")
     print(row)
+
+# Updating database with new entries with new excel spreadsheet
+
+import pandas as pd
+
+f = pd.read_excel(
+    "C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/Data_import/13122021_Online_DB_MAR.xlsx",
+    sheet_name="Study_variants",
+)
+
+for index, row in f.iterrows():
+    a = Studies.objects.filter(title=row["DOI"])
+    b = VariantDetails.objects.filter(title=row["Variant_name"])
+    try:
+        c = StudyVariants.objects.get(
+            paper=a.first(),
+            variant=b.first(),
+            reported_allele_or_genotype=row["Reported_allele_or_genotype"],
+            condition=row["Condition"],
+            condition_description=row["Condition_description"],
+            disease_status=row["Disease_status"],
+        )
+    except Exception as e:
+        print(e)
+
+    if a.exists() and b.exists() and not c.exists():
+        print("missing entry")
+        s = StudyVariants()
+        s.paper = a[0]
+        s.variant = b[0]
+        s.reported_allele_or_genotype = row["Reported_allele_or_genotype"]
+        s.condition = row["Condition"]
+        s.condition_description = row["Condition_description"]
+        s.disease_status = row["Disease_status"]
+        s.odds_ratio = row["Odds_ratio"]
+        s.p_value = row["P_value"]
+        s.save()
+        print(s)
+    else:
+        print("No corresponding study or variant name")
+        print(row)
