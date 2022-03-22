@@ -3,9 +3,12 @@ import sys
 import django_filters
 from django.db import models
 from studies.models import StudiesIndexPage
-from wagtail.admin.edit_handlers import FieldPanel
-from wagtail.core.fields import RichTextField
+from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
+from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Page
+from wagtail.images.edit_handlers import ImageChooserPanel
+
+from home import blocks
 
 sys.path.append(
     "C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/neshiedbv7_links_working/mysite/gene_details"
@@ -30,20 +33,23 @@ class HomePage(Page):
     ]
 
     body = RichTextField(blank=True)
+    header_image = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+    about = RichTextField(blank=True)
+
+    content = StreamField([("cards", blocks.CardBlock())], null=True, blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel("body"),
+        ImageChooserPanel("header_image"),
+        FieldPanel("about"),
+        StreamFieldPanel("content"),
     ]
-
-    # def get_context(self, request, *args, **kwargs):
-    #     context = super().get_context(request, *args, **kwargs)
-    #     context['filter'] = HpoFilter(self.request.GET, queryset = self.get_queryset())
-    #     return context
-
-    # @property
-    # def all_genes(self):
-    #     """Returns all hpo terms except where null"""
-    #     return GeneDetails.objects.exclude(name__isnull=True)
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
@@ -54,18 +60,3 @@ class HomePage(Page):
             "condition"
         ).distinct()
         return context
-
-
-# class HpoFilter(django_filters.FilterSet):
-#     class Meta:
-#         model = gene_details.models.GeneHpo
-#         """Can make this a foreign key related name"""
-#         fields = ["name"]
-
-
-# @property
-# def qs(self):
-#     """Returns all hpo terms except where null"""
-#     parent = super().qs
-#     name = getattr(self.request, 'name', None)
-#     return parent.filter(name__isnull=True)

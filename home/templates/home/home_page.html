@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 
 {% block body_class %}template-homepage{% endblock %}
 
@@ -10,35 +10,37 @@
 
 {% block content %}
 <div>
+        {% image self.header_image fill-6000x4700 as img %}
         <div>
-                <div class="home-heading col-12 text-centre pt-5 px-5 pb-2 bg-light">
-                        <h1>{{ page.title }}</h1>
+                <div class="home-heading-bg col-12 text-centre pt-5 pb-4 px-5 pb-2 bg-light"
+                        style="background-image: url('{{ img.url }}'); background-size:cover;">
+                        <div id="home-title">
+                                <h1><b>{{ page.title }}</b></h1>
+                        </div>
+                        <div id="home-body">
+                                <p>{{ page.body|richtext }}</p>
+                        </div>
                 </div>
-                <div class="body-panel pb-3 px-5 bg-light">
-                        {{ page.body|richtext }}
+                <div id="home-about" class="container my-5 pt-5 pb-4">
+                        <div class="row">
+                                <div class="col-8">
+                                        <div id="home-about-h">
+                                                <h2>About</h2>
+                                        </div>
+                                        <div id="home-about-p">
+                                                <p>{{ page.about|richtext }}</p>
+                                        </div>
+                                </div>
+                                <div class="col-4"></div>
+                        </div>
+                </div>
+                <div class="bg-light">
+                        <div id="team-cards" class="container">
+                                {% for block in page.content %}
+                                {% include_block block %}
+                                {% endfor %}
+                        </div>
                 </div>
         </div>
-        
-        {% comment %} <div> {% endcomment %}
-                <!-- <H2>Filters</H2>
-                <div>
-                        <form action="filter_results/" method="post">
-                                {% csrf_token %} -->
-                <!-- {{ form.as_p }} -->
-                <!-- <label>Filter by condition:</label>
-                                <select name="condition">
-                                        <option value="">All</option>
-                                        {% for entry in study_variants %}
-                                        <option value="{{entry.condition}}">{{ entry.condition }}</option>
-                                        {% endfor %}
-                                </select>
-                                <input type="submit" value="Filter">
-                        </form>
-                </div> -->
-                {% comment %}
-        </div> {% endcomment %}
 </div>
-
-
-
 {% endblock content %}

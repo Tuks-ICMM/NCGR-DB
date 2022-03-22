@@ -32,3 +32,20 @@ table tr.cursor-pointer {
 .btn-group {
   background: rgba(240, 239, 237, 0.5);
 }
+
+#home-body {
+  font-size: 20px;
+}
+
+#home-about {
+  /* margin-left: 0px;
+  margin-right: 0px; */
+}
+
+#home-about-h {
+  font-size: 30px;
+}
+
+#home-about-p {
+  font-size: 16px;
+}
