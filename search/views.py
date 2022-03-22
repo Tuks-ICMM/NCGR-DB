@@ -40,7 +40,9 @@ def search(request):
 
     # Filter_queries
     complex_filter_query = json.loads(
-        request.GET.get("complex_filter_query", None),
+        request.GET.get("complex_filter_query")
+        if request.GET.get("complex_filter_query")
+        else json.dumps(dict()),
     )
     search_query = request.GET.get("query", None)
     CP_query = request.GET.get("CP_query", None)
