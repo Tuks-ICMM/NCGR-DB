@@ -199,7 +199,7 @@
         filters: [{
             id: 'Condition',
             label: 'Condition',
-            type: 'integer',
+            type: 'string',
             input: 'radio',
             operators: ['equal', 'not_equal'],
             values: [{
@@ -224,7 +224,7 @@
         }, {
             id: 'P-value',
             label: 'P-value',
-            type: 'integer',
+            type: 'double',
             input: 'select',
             operators: ['equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal'],
             values: [{
@@ -250,28 +250,68 @@
         }, {
             id: 'Predicted variant effect',
             label: 'Predicted variant effect',
-            type: 'integer',
+            type: 'string',
             input: 'radio',
             operators: ['equal', 'not_equal'],
             values: [{
                 value: 'Pathogenic',
                 label: 'Pathogenic'
             }, {
-                value: 'Likely pathogenic',
-                label: 'Likely pathogenic'
-            }, {
                 value: 'Deleterious',
                 label: 'Deleterious'
+            }]
+        }, {
+            id: 'Variant consequences',
+            label: 'Variant consequences',
+            type: 'string',
+            input: 'select',
+            operators: ['equal', 'not_equal'],
+            values: [{
+                value: '3_prime_UTR_variant',
+                label: '3_prime_UTR_variant'
+            }, {
+                value: '5_prime_UTR_variant',
+                label: '5_prime_UTR_variant'
+            }, {
+                value: 'downstream_gene_variant',
+                label: 'downstream_gene_variant'
+            }, {
+                value: 'upstream_gene_variant',
+                label: 'upstream_gene_variant'
+            }, {
+                value: 'frameshift_variant',
+                label: 'frameshift_variant'
+            }, {
+                value: 'inframe_insertion',
+                label: 'inframe_insertion'
+            }, {
+                value: 'intron_variant',
+                label: 'intron_variant'
+            }, {
+                value: 'missense_variant',
+                label: 'missense_variant'
+            }, {
+                value: 'splice_donor_variant',
+                label: 'splice_donor_variant'
+            }, {
+                value: 'splice_region_variant',
+                label: 'splice_region_variant'
+            }, {
+                value: 'stop_gained',
+                label: 'stop_gained'
+            }, {
+                value: 'synonymous_variant',
+                label: 'synonymous_variant'
             }]
         }, {
             id: 'RVIS',
             label: 'Gene residual variation intolerance score (RVIS)',
             type: 'integer',
             input: 'select',
-            operators: ['equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal'],
+            operators: ['less', 'less_or_equal', 'greater', 'greater_or_equal'],
             values: [{
-                value: 1,
-                label: 1
+                value: 0,
+                label: 0
             }]
         }, ]
     };

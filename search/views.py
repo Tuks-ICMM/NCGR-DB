@@ -39,7 +39,9 @@ def search(request):
     )
 
     # Filter_queries
-    complex_filter_query = json.loads(request.GET.get("complex_filter_query", None))
+    complex_filter_query = json.loads(
+        request.GET.get("complex_filter_query", None),
+    )
     search_query = request.GET.get("query", None)
     CP_query = request.GET.get("CP_query", None)
     NESHIE_query = request.GET.get("NESHIE_query", None)
@@ -59,18 +61,43 @@ def search(request):
         filter_rules = list()
         for rule in complex_filter_query["rules"]:
             if rule["id"] == "Condition":
-                if rule["value"] == "NESHIE":
-                    filter_rules.append(Q(study_variants__condition__contains="HIE"))
-                elif rule["value"] == "NESHIE-caused CP":
-                    filter_rules.append(
-                        Q(study_variants__condition_description__contains="HIE")
-                        | Q(study_variants__condition_description__contains="Asphyxia")
-                        | Q(
-                            study_variants__condition_description__contains="Neonatal encephalopathy"
+                if rule["operator"] == "equal":
+                    if rule["value"] == "NESHIE":
+                        filter_rules.append(
+                            Q(study_variants__condition__contains="HIE")
                         )
-                    )
-                elif rule["value"] == "CP":
-                    filter_rules.append(Q(study_variants__condition__contains="CP"))
+                    elif rule["value"] == "NESHIE-caused CP":
+                        filter_rules.append(
+                            Q(study_variants__condition_description__contains="HIE")
+                            | Q(
+                                study_variants__condition_description__contains="Asphyxia"
+                            )
+                            | Q(
+                                study_variants__condition_description__contains="Neonatal encephalopathy"
+                            )
+                        )
+                    elif rule["value"] == "CP":
+                        filter_rules.append(Q(study_variants__condition__contains="CP"))
+                elif rule["operator"] == "not_equal":
+                    if rule["value"] == "NESHIE":
+                        filter_rules.append(
+                            ~Q(study_variants__condition__contains="HIE")
+                        )
+                    elif rule["value"] == "NESHIE-caused CP":
+                        filter_rules.append(
+                            ~Q(study_variants__condition_description__contains="HIE")
+                            | ~Q(
+                                study_variants__condition_description__contains="Asphyxia"
+                            )
+                            | ~Q(
+                                study_variants__condition_description__contains="Neonatal encephalopathy"
+                            )
+                        )
+                    elif rule["value"] == "CP":
+                        filter_rules.append(
+                            ~Q(study_variants__condition__contains="CP")
+                        )
+
             elif rule["id"] == "P-value":
                 if rule["operator"] == "less":
                     filter_rules.append(
@@ -92,6 +119,7 @@ def search(request):
                     filter_rules.append(
                         Q(study_variants__p_value=Decimal(rule["value"]))
                     )
+
             elif rule["id"] == "Odds ratio":
                 if rule["operator"] == "less":
                     filter_rules.append(
@@ -113,6 +141,7 @@ def search(request):
                     filter_rules.append(
                         Q(study_variants__odds_ratio=Decimal(rule["value"]))
                     )
+
             elif rule["id"] == "Predicted variant effect":
                 if rule["operator"] == "equal":
                     if rule["value"] == "Pathogenic":
@@ -122,115 +151,164 @@ def search(request):
                             | Q(ensembl_vep__sift4g_pred__contains="P")
                             | Q(ensembl_vep__fathmm_pred__contains="P")
                         )
+                    elif rule["value"] == "Deleterious":
+                        filter_rules.append(
+                            Q(mt_vep__query_prediction="disease causing")
+                            | Q(mt_vep__query_prediction="disease causing automatic")
+                            | Q(ensembl_vep__polyphen2_hvar_pred__contains="D")
+                            | Q(ensembl_vep__sift_prediction__contains="deleterious")
+                            | Q(ensembl_vep__sift4g_pred__contains="D")
+                            | Q(ensembl_vep__fathmm_pred__contains="D")
+                        )
                 elif rule["operator"] == "not_equal":
+                    if rule["value"] == "Pathogenic":
+                        filter_rules.append(
+                            ~Q(ensembl_vep__polyphen2_hvar_pred__contains="P")
+                            | ~Q(ensembl_vep__sift_prediction__contains="pathogenic")
+                            | ~Q(ensembl_vep__sift4g_pred__contains="P")
+                            | ~Q(ensembl_vep__fathmm_pred__contains="P")
+                        )
+                    elif rule["value"] == "Deleterious":
+                        filter_rules.append(
+                            ~Q(mt_vep__query_prediction="disease causing")
+                            | ~Q(mt_vep__query_prediction="disease causing automatic")
+                            | ~Q(ensembl_vep__polyphen2_hvar_pred__contains="D")
+                            | ~Q(ensembl_vep__sift_prediction__contains="deleterious")
+                            | ~Q(ensembl_vep__sift4g_pred__contains="D")
+                            | ~Q(ensembl_vep__fathmm_pred__contains="D")
+                        )
+
+            elif rule["id"] == "RVIS":
+                if rule["operator"] == "less":
+                    filter_rules.append(Q(gene__rvis_score__lt=Decimal(rule["value"])))
+                elif rule["operator"] == "less_or_equal":
+                    filter_rules.append(Q(gene__rvis_score__lte=Decimal(rule["value"])))
+                elif rule["operator"] == "greater":
+                    filter_rules.append(Q(gene__rvis_score__gt=Decimal(rule["value"])))
+                elif rule["operator"] == "greater_or_equal":
+                    filter_rules.append(Q(gene__rvis_score__gte=Decimal(rule["value"])))
+            elif rule["id"] == "Gene HPO":
+                if rule["operator"] == "contains":
+                    filter_rules.append(Q(gene__gene_hpo__contains=str(rule["input"])))
+                elif rule["operator"] == "equal":
+                    filter_rules.append(Q(gene__gene_hpo=str(rule["input"])))
+                elif rule["operator"] == "not_equal":
+                    filter_rules.append(~Q(gene__gene_hpo__contains=str(rule["input"])))
+
+            elif rule["id"] == "Variant consequences":
+                if rule["operator"] == "equal":
                     filter_rules.append(
-                        Q(study_variants__odds_ratio=Decimal(rule["value"]))
+                        Q(ensembl_vep__consequence_terms__contains=rule["value"])
+                    )
+                if rule["operator"] == "not_equal":
+                    filter_rules.append(
+                        ~Q(ensembl_vep__consequence_terms__contains=rule["value"])
                     )
 
     search_results = VariantDetails.objects.live()
-    if NESHIE_CP_query and NESHIE_query and CP_query:
-        search_results = search_results.filter(
-            Q(study_variants__condition_description__contains="HIE")
-            | Q(study_variants__condition_description__contains="Asphyxia")
-            | Q(
-                study_variants__condition_description__contains="Neonatal encephalopathy"
-            )
-            | Q(study_variants__condition__contains="HIE")
-            | Q(study_variants__condition__contains="CP")
-        )
-    elif NESHIE_CP_query and NESHIE_query and not CP_query:
-        search_results = search_results.filter(
-            Q(study_variants__condition_description__contains="HIE")
-            | Q(study_variants__condition_description__contains="Asphyxia")
-            | Q(
-                study_variants__condition_description__contains="Neonatal encephalopathy"
-            )
-            | Q(study_variants__condition__contains="HIE")
-        )
-    elif NESHIE_CP_query and CP_query and not NESHIE_query:
-        search_results = search_results.filter(
-            Q(study_variants__condition_description__contains="HIE")
-            | Q(study_variants__condition_description__contains="Asphyxia")
-            | Q(
-                study_variants__condition_description__contains="Neonatal encephalopathy"
-            )
-            | Q(study_variants__condition__contains="CP")
-        )
-    elif NESHIE_query and CP_query and not NESHIE_CP_query:
-        search_results = search_results.filter(
-            Q(study_variants__condition__contains="HIE")
-            | Q(study_variants__condition__contains="CP")
-        )
-    elif NESHIE_CP_query and not CP_query and not NESHIE_query:
-        search_results = search_results.filter(
-            Q(study_variants__condition_description__contains="HIE")
-            | Q(study_variants__condition_description__contains="Asphyxia")
-            | Q(
-                study_variants__condition_description__contains="Neonatal encephalopathy"
-            )
-        )
-    elif NESHIE_query and not CP_query and not NESHIE_CP_query:
-        search_results = search_results.filter(
-            Q(study_variants__condition__contains="HIE")
-        )
-    elif CP_query and not NESHIE_query and not NESHIE_CP_query:
-        search_results = search_results.filter(
-            Q(study_variants__condition__contains="CP")
-        )
-    if p_value_query and odds_ratio_query:
-        search_results = search_results.filter(
-            Q(study_variants__p_value__lt=Decimal("0.05"))
-            | Q(study_variants__odds_ratio__gt=Decimal("1"))
-        )
+    # if NESHIE_CP_query and NESHIE_query and CP_query:
+    #     search_results = search_results.filter(
+    #         Q(study_variants__condition_description__contains="HIE")
+    #         | Q(study_variants__condition_description__contains="Asphyxia")
+    #         | Q(
+    #             study_variants__condition_description__contains="Neonatal encephalopathy"
+    #         )
+    #         | Q(study_variants__condition__contains="HIE")
+    #         | Q(study_variants__condition__contains="CP")
+    #     )
+    # elif NESHIE_CP_query and NESHIE_query and not CP_query:
+    #     search_results = search_results.filter(
+    #         Q(study_variants__condition_description__contains="HIE")
+    #         | Q(study_variants__condition_description__contains="Asphyxia")
+    #         | Q(
+    #             study_variants__condition_description__contains="Neonatal encephalopathy"
+    #         )
+    #         | Q(study_variants__condition__contains="HIE")
+    #     )
+    # elif NESHIE_CP_query and CP_query and not NESHIE_query:
+    #     search_results = search_results.filter(
+    #         Q(study_variants__condition_description__contains="HIE")
+    #         | Q(study_variants__condition_description__contains="Asphyxia")
+    #         | Q(
+    #             study_variants__condition_description__contains="Neonatal encephalopathy"
+    #         )
+    #         | Q(study_variants__condition__contains="CP")
+    #     )
+    # elif NESHIE_query and CP_query and not NESHIE_CP_query:
+    #     search_results = search_results.filter(
+    #         Q(study_variants__condition__contains="HIE")
+    #         | Q(study_variants__condition__contains="CP")
+    #     )
+    # elif NESHIE_CP_query and not CP_query and not NESHIE_query:
+    #     search_results = search_results.filter(
+    #         Q(study_variants__condition_description__contains="HIE")
+    #         | Q(study_variants__condition_description__contains="Asphyxia")
+    #         | Q(
+    #             study_variants__condition_description__contains="Neonatal encephalopathy"
+    #         )
+    #     )
+    # elif NESHIE_query and not CP_query and not NESHIE_CP_query:
+    #     search_results = search_results.filter(
+    #         Q(study_variants__condition__contains="HIE")
+    #     )
+    # elif CP_query and not NESHIE_query and not NESHIE_CP_query:
+    #     search_results = search_results.filter(
+    #         Q(study_variants__condition__contains="CP")
+    #     )
+    # if p_value_query and odds_ratio_query:
+    #     search_results = search_results.filter(
+    #         Q(study_variants__p_value__lt=Decimal("0.05"))
+    #         | Q(study_variants__odds_ratio__gt=Decimal("1"))
+    #     )
 
-    elif p_value_query and not odds_ratio_query:
-        search_results = search_results.filter(
-            study_variants__p_value__lt=Decimal("0.05")
-        )
-    elif odds_ratio_query and not p_value_query:
-        search_results = search_results.filter(
-            study_variants__odds_ratio__gt=Decimal("1")
-        )
+    # elif p_value_query and not odds_ratio_query:
+    #     search_results = search_results.filter(
+    #         study_variants__p_value__lt=Decimal("0.05")
+    #     )
+    # elif odds_ratio_query and not p_value_query:
+    #     search_results = search_results.filter(
+    #         study_variants__odds_ratio__gt=Decimal("1")
+    #     )
 
-    if pathogenic_query and deleterious_query:
-        search_results = search_results.filter(
-            Q(ensembl_vep__polyphen2_hvar_pred__contains="P")
-            | Q(ensembl_vep__sift_prediction__contains="pathogenic")
-            | Q(ensembl_vep__sift4g_pred__contains="P")
-            | Q(ensembl_vep__fathmm_pred__contains="P")
-            | Q(ensembl_vep__polyphen2_hvar_pred__contains="D")
-            | Q(ensembl_vep__sift_prediction__contains="deleterious")
-            | Q(ensembl_vep__sift4g_pred__contains="D")
-            | Q(ensembl_vep__fathmm_pred__contains="D")
-            | Q(mt_vep__query_prediction="disease causing")
-            | Q(mt_vep__query_prediction="disease causing automatic")
-        )
+    # if pathogenic_query and deleterious_query:
+    #     search_results = search_results.filter(
+    #         Q(ensembl_vep__polyphen2_hvar_pred__contains="P")
+    #         | Q(ensembl_vep__sift_prediction__contains="pathogenic")
+    #         | Q(ensembl_vep__sift4g_pred__contains="P")
+    #         | Q(ensembl_vep__fathmm_pred__contains="P")
+    #         | Q(ensembl_vep__polyphen2_hvar_pred__contains="D")
+    #         | Q(ensembl_vep__sift_prediction__contains="deleterious")
+    #         | Q(ensembl_vep__sift4g_pred__contains="D")
+    #         | Q(ensembl_vep__fathmm_pred__contains="D")
+    #         | Q(mt_vep__query_prediction="disease causing")
+    #         | Q(mt_vep__query_prediction="disease causing automatic")
+    #     )
 
-    elif pathogenic_query and not deleterious_query:
-        search_results = search_results.filter(
-            Q(ensembl_vep__polyphen2_hvar_pred__contains="P")
-            | Q(ensembl_vep__sift_prediction__contains="pathogenic")
-            | Q(ensembl_vep__sift4g_pred__contains="P")
-            | Q(ensembl_vep__fathmm_pred__contains="P")
-        )
-    elif deleterious_query and not pathogenic_query:
-        search_results = search_results.filter(
-            Q(mt_vep__query_prediction="disease causing")
-            | Q(mt_vep__query_prediction="disease causing automatic")
-            | Q(ensembl_vep__polyphen2_hvar_pred__contains="D")
-            | Q(ensembl_vep__sift_prediction__contains="deleterious")
-            | Q(ensembl_vep__sift4g_pred__contains="D")
-            | Q(ensembl_vep__fathmm_pred__contains="D")
-        )
-    if rvis_query:
-        search_results = search_results.filter(gene__rvis_score__lt=Decimal("0"))
-    # Change to elastic search
-    if condition_description_query:
-        search_results = search_results.filter(
-            study_variants__condition_description__in=condition_description_query
-        )
-    if hpo_query:
-        search_results = search_results.filter(gene__gene_hpo__name__in=hpo_query)
+    # elif pathogenic_query and not deleterious_query:
+    #     search_results = search_results.filter(
+    #         Q(ensembl_vep__polyphen2_hvar_pred__contains="P")
+    #         | Q(ensembl_vep__sift_prediction__contains="pathogenic")
+    #         | Q(ensembl_vep__sift4g_pred__contains="P")
+    #         | Q(ensembl_vep__fathmm_pred__contains="P")
+    #     )
+    # elif deleterious_query and not pathogenic_query:
+    #     search_results = search_results.filter(
+    #         Q(mt_vep__query_prediction="disease causing")
+    #         | Q(mt_vep__query_prediction="disease causing automatic")
+    #         | Q(ensembl_vep__polyphen2_hvar_pred__contains="D")
+    #         | Q(ensembl_vep__sift_prediction__contains="deleterious")
+    #         | Q(ensembl_vep__sift4g_pred__contains="D")
+    #         | Q(ensembl_vep__fathmm_pred__contains="D")
+    #     )
+    # if rvis_query:
+    #     search_results = search_results.filter(gene__rvis_score__lt=Decimal("0"))
+    # # Change to elastic search
+    # if condition_description_query:
+    #     search_results = search_results.filter(
+    #         study_variants__condition_description__in=condition_description_query
+    #     )
+    # if hpo_query:
+    #     search_results = search_results.filter(gene__gene_hpo__name__in=hpo_query)
 
     # Pagination
     paginator = Paginator(search_results, 200)
