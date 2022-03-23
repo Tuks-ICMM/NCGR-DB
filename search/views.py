@@ -11,8 +11,6 @@ from wagtail.core.models import Page
 from wagtail.search.models import Query
 
 
-from django.db.models import Q
-
 def operator_check(operator: str, filter_base: str, search_value: str) -> Q:
     """Implements Djangos double-underscore filters such as less-than-or-equal.
 
@@ -94,6 +92,7 @@ def filter_type_to_q(rule: str) -> Q:
                     full_query.add(operator_check(rule["operator"], key, value), Q.OR)
                 return full_query
 
+
 def tree_explorer(data: dict) -> Q:
     """Generates a full Django Q() object with complex nested AND/OR logic.
 
@@ -106,6 +105,8 @@ def tree_explorer(data: dict) -> Q:
     Yields:
         Iterator[Q]: Q() instance generator for recursive parsing of nested complex queries.
     """
+    # print(data)
+    # print(type(data))
     if "type" in data:
         # Assume its a valid rule and yield into Q() representation:
         yield filter_type_to_q(data)
@@ -163,10 +164,7 @@ def search(request):
     )
 
     # Filter_queries
-    complex_filter_query = request.GET.get("complex_filter_query", dict())
-    # if request.GET.get("complex_filter_query")
-    # else json.loads("{}"),
-    print(complex_filter_query)
+    complex_filter_query = json.loads(request.GET.get("complex_filter_query", "{}"))
 
     search_query = request.GET.get("query", None)
     CP_query = request.GET.get("CP_query", None)
@@ -184,7 +182,7 @@ def search(request):
 
     # Search
     if complex_filter_query is not None and "condition" in complex_filter_query:
-        q_filter = tree_explorer(complex_filter_query)
+        q_filter = next(tree_explorer(complex_filter_query))
         print(q_filter)
         # if complex_filter_query["condition"] == "AND":
         #     filter_rules = list()
@@ -360,7 +358,7 @@ def search(request):
         #                     ~Q(ensembl_vep__consequence_terms__contains=rule["value"])
         #                 )
 
-    # search_results = VariantDetails.objects.live()
+    search_results = VariantDetails.objects.live()
     # if NESHIE_CP_query and NESHIE_query and CP_query:
     #     search_results = search_results.filter(
     #         Q(study_variants__condition_description__contains="HIE")
