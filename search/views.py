@@ -11,46 +11,104 @@ from wagtail.core.models import Page
 from wagtail.search.models import Query
 
 
-def generate_q(rule: dict) -> Q:
-    """convert a string entry into a Q object
+from django.db.models import Q
+
+def operator_check(operator: str, filter_base: str, search_value: str) -> Q:
+    """Implements Djangos double-underscore filters such as less-than-or-equal.
+
+    Args:
+        rule (dict): A dictionary entry representing an individual JQuery QueryBuilder rule.
+        filter_base (str): A string representing the base Django model filter string to which we will add the appropriate logic filter.
+
+    Returns:
+        Q: A Q() object representation of the rule, complete with its appropriate logic.
+    """
+
+    base_dictionary = dict()
+    if operator == "less":
+        base_dictionary[filter_base + "__lt"] = search_value
+        return Q(**base_dictionary)
+    elif operator == "greater":
+        base_dictionary[filter_base + "__gt"] = search_value
+        return Q(**base_dictionary)
+    elif operator == "less or equal":
+        base_dictionary[filter_base + "__lte"] = search_value
+        return Q(**base_dictionary)
+    elif operator == "greater or equal":
+        base_dictionary[filter_base + "__gte"] = search_value
+        return Q(**base_dictionary)
+    elif operator == "equal":
+        base_dictionary[filter_base + "__contains"] = search_value
+        return Q(**base_dictionary)
+    elif operator == "not_equal":
+        base_dictionary[filter_base + "__contains"] = search_value
+        return ~Q(**base_dictionary)
+
+
+def filter_type_to_q(rule: str) -> Q:
+    """Check what type of filter it is and process to Q() object. (Calls another function for -> Q() conversion)
+
     Args:
         rule (dict): The individual JQuery QueryBuilder rule as a dictionary
+
     Returns:
         Q: A Django Q() object instance representing the JQuery QueryBuilder rule.
     """
-
     if rule["type"] == "integer":
-        return rule["value"]  # Perform Q() object lookup here
+        if rule["field"] == "RVIS":  # <Select> element
+            filter_string_base = "gene__rvis_score"
+            return operator_check(rule["operator"], filter_string_base, 0)
+        elif rule["field"] == "P-value":  # <Select> element
+            filter_string_base = "study_variants__p_value"
+            return operator_check(rule["operator"], filter_string_base, rule["value"])
     elif rule["type"] == "string":
-        return rule["value"]  # Perform Q() object lookup here
-    elif rule["type"] == "double":
-        if rule["field"] == "P-value":
-            if rule["operator"] == "less":
-                return Q(study_variants__p_value__lt=rule["value"])
-            elif rule["operator"] == "greater":
-                return Q(study_variants__p_value__gt=rule["value"])
-            elif rule["operator"] == "less or equal":
-                return Q(study_variants__p_value__lte=rule["value"])
-            elif rule["operator"] == "greater or equal":
-                return Q(study_variants__p_value__gte=rule["value"])
-            elif rule["operator"] == "equal":
-                return Q(study_variants__p_value=rule["value"])
-                # return rule["value"]  # Perform Q() object lookup here
+        if rule["field"] == "Condition":  # <Radio> element
+            filter_string_base = "study_variants__p_value"
+            return operator_check(rule["operator"], filter_string_base, rule["value"])
+        elif rule["field"] == "Gene HPO":  # <Text> element
+            filter_string_base = "gene__gene_hpo"
+            return operator_check(rule["operator"], filter_string_base, rule["value"])
+        elif rule["field"] == "Variant consequences":  # <Select> element
+            filter_string_base = "ensembl_vep__consequence_terms"
+            return operator_check(rule["operator"], filter_string_base, rule["value"])
+        elif rule["field"] == "Predicted variant effect":  # <Radio> element
+            if rule["value"] == "Pathogenic":
+                full_query = Q()
+                for key, value in {
+                    "ensembl_vep__polyphen2_hvar_pred": "P",
+                    "ensembl_vep__sift_prediction": "pathogenic",
+                    "ensembl_vep__sift4g_pred": "P",
+                    "ensembl_vep__fathmm_pred": "P",
+                }.items():
+                    full_query.add(operator_check(rule["operator"], key, value), Q.OR)
+                return full_query
+            elif rule["value"] == "Deleterious":
+                full_query = Q()
+                for key, value in {
+                    "mt_vep__query_prediction": "disease causing",
+                    "ensembl_vep__polyphen2_hvar_pred": "D",
+                    "ensembl_vep__sift_prediction": "deleterious",
+                    "ensembl_vep__sift4g_pred": "D",
+                    "ensembl_vep__fathmm_pred": "D",
+                }.items():
+                    full_query.add(operator_check(rule["operator"], key, value), Q.OR)
+                return full_query
 
-
-def compile_filter(data: dict) -> Q:
+def tree_explorer(data: dict) -> Q:
     """Generates a full Django Q() object with complex nested AND/OR logic.
+
     Args:
         data (dict): A python dictionary of the JQuery QueryBuilder JSON output.
+
     Returns:
         Q: A complex Django-compatible Q() object representing the complex query.
+
     Yields:
         Iterator[Q]: Q() instance generator for recursive parsing of nested complex queries.
     """
-
     if "type" in data:
         # Assume its a valid rule and yield into Q() representation:
-        yield generate_q(data)
+        yield filter_type_to_q(data)
     elif "condition" in data:
         # Assume it is a nested group and call this generator recursively,
         # constructing this groups complex Q() object in the process:
@@ -58,7 +116,7 @@ def compile_filter(data: dict) -> Q:
         for rule in data["rules"]:
             # Get next() result from generator above
             # (bc recursive yields) and process logic:
-            for rule_instance in compile_filter(rule):
+            for rule_instance in tree_explorer(rule):
                 if data["condition"] == "AND":
                     query.add(rule_instance, Q.AND)
                 if data["condition"] == "OR":
@@ -70,6 +128,14 @@ def compile_filter(data: dict) -> Q:
 
 
 def search(request):
+    """_summary_
+
+    Args:
+        request (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     page = request.GET.get("page", 1)
 
     # Filters
@@ -97,7 +163,7 @@ def search(request):
     )
 
     # Filter_queries
-    complex_filter_query = request.GET.get("complex_filter_query", None)
+    complex_filter_query = request.GET.get("complex_filter_query", dict())
     # if request.GET.get("complex_filter_query")
     # else json.loads("{}"),
     print(complex_filter_query)
@@ -118,7 +184,7 @@ def search(request):
 
     # Search
     if complex_filter_query is not None and "condition" in complex_filter_query:
-        q_filter = compile_filter(complex_filter_query)
+        q_filter = tree_explorer(complex_filter_query)
         print(q_filter)
         # if complex_filter_query["condition"] == "AND":
         #     filter_rules = list()
