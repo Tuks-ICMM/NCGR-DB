@@ -215,10 +215,10 @@
 
         }, {
             id: 'Gene HPO',
-            label: 'Gene human phenotype ontology (HPO)',
+            label: 'Gene HPO',
             type: 'string',
             input: 'text',
-            operators: ['contains', 'equal', 'not_equal'],
+            operators: ['equal', 'not_equal'],
             placeholder: 'Enter a valid HPO term here ',
             size: 40
         }, {
@@ -264,7 +264,7 @@
             id: 'Variant consequences',
             label: 'Variant consequences',
             type: 'string',
-            input: 'select',
+            input: 'radio',
             operators: ['equal', 'not_equal'],
             values: [{
                 value: '3_prime_UTR_variant',
@@ -305,7 +305,7 @@
             }]
         }, {
             id: 'RVIS',
-            label: 'Gene residual variation intolerance score (RVIS)',
+            label: 'RVIS',
             type: 'integer',
             input: 'select',
             operators: ['less', 'less_or_equal', 'greater', 'greater_or_equal'],
