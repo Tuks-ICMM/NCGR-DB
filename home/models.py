@@ -42,7 +42,14 @@ class HomePage(Page):
     )
     about = RichTextField(blank=True)
 
-    content = StreamField([("cards", blocks.CardBlock())], null=True, blank=True)
+    content = StreamField(
+        [
+            ("cards", blocks.CardBlock()),
+            ("affiliation_cards", blocks.AffiliationBlock()),
+        ],
+        null=True,
+        blank=True,
+    )
 
     content_panels = Page.content_panels + [
         FieldPanel("body"),

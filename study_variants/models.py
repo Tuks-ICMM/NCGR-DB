@@ -46,7 +46,7 @@ class StudyVariants(models.Model):
         max_digits=5, decimal_places=3, blank=True, null=True
     )  # Field name made lowercase.
     p_value = models.DecimalField(
-        max_digits=5, decimal_places=4, blank=True, null=True
+        max_digits=9, decimal_places=8, blank=True, null=True
     )  # Field name made lowercase.
 
     def __str__(self):

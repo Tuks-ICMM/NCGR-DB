@@ -31,11 +31,12 @@
                                                 <p>{{ page.about|richtext }}</p>
                                         </div>
                                 </div>
-                                <div class="col-4"></div>
+                                <div class="col-4">
+                                </div>
                         </div>
                 </div>
-                <div class="bg-light">
-                        <div id="team-cards" class="container">
+                <div class="col-12">
+                        <div id="team-cards">
                                 {% for block in page.content %}
                                 {% include_block block %}
                                 {% endfor %}

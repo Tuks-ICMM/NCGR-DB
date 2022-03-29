@@ -49,3 +49,7 @@ table tr.cursor-pointer {
 #home-about-p {
   font-size: 16px;
 }
+
+#affiliation-img {
+  border: none;
+}

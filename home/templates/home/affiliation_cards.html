@@ -1,0 +1,23 @@
+{% load wagtailimages_tags %}
+<div>
+    <div class="mx-4 p-4">
+        <div class="row">
+            {% comment %} <div class="col-1">
+                <p><b>Affiliations:</b></p>
+            </div> {% endcomment %}
+            {% comment %} <div class="col-6">
+            </div> {% endcomment %}
+            {% for card in self.cards %}
+            {% image card.image fill-500x300 as img %}
+            <div class="col-2 ml-5 pl-5">
+                <div id="affiliation-img" class="card mb-2" style="max-width: 13rem;">
+                    <img src="{{img.url}}" class="card-img-top" alt="{{img.alt}}">
+                </div>
+            </div>
+            {% endfor %}
+            <div class="col-1 m-auto">
+                <p><b>Correspondence:</b><br> michael.pepper@up.ac.za</p>
+            </div>
+        </div>
+    </div>
+</div>
