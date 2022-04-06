@@ -1,4 +1,5 @@
 import sys
+
 from django.db import models
 from gene_details.models import GeneDetails
 from modelcluster.fields import ParentalKey
@@ -38,7 +39,7 @@ class VariantDetails(Page):
     )  # Field name made lowercase.
     variant_type = models.TextField(blank=True, null=True)  # Field name made lowercase.
     gene = ParentalKey(
-        gene_details.models.GeneDetails,
+        "gene_details.GeneDetails",
         on_delete=models.SET_NULL,
         related_name="variant_details",
         null=True,
