@@ -1,6 +1,4 @@
 import sys
-
-import gene_details.models
 from django.db import models
 from gene_details.models import GeneDetails
 from modelcluster.fields import ParentalKey

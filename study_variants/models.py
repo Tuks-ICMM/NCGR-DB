@@ -1,8 +1,5 @@
 import sys
 
-import studies.models
-import variant_details.models
-from django.db import models
 from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import RichTextField
