@@ -1,18 +1,12 @@
 import sys
 
+import studies.models
+import variant_details.models
 from django.db import models
 from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page, ParentalKey
-
-sys.path.append(
-    "C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/NESHIE-DB/variant_details"
-)
-import variant_details.models
-
-sys.path.append("C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/NESHIE-DB/mysite/studies")
-import studies.models
 
 
 # Create your models here.

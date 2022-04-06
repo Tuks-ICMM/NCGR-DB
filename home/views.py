@@ -1,17 +1,13 @@
-from django.shortcuts import render
-from django import forms
-
 # from .models import HpoFilter
 import sys
-from .forms import filter_form
-from django.http import HttpResponse
 
-sys.path.append("C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/NESHIE-DB/gene_details")
 import gene_details.models
-
-sys.path.append("C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/NESHIE-DB/study_variants")
 import study_variants.models
+from django import forms
+from django.http import HttpResponse
+from django.shortcuts import render
 
+from .forms import filter_form
 
 # Create your views here.
 # def hpo_list(request):

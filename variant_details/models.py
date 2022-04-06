@@ -1,5 +1,6 @@
 import sys
 
+import gene_details.models
 from django.db import models
 from gene_details.models import GeneDetails
 from modelcluster.fields import ParentalKey
@@ -7,9 +8,6 @@ from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
-
-sys.path.append("C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/NESHIE-DB/gene_details")
-import gene_details.models
 
 
 # Create your models here.
