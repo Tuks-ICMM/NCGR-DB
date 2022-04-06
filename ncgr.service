@@ -5,7 +5,7 @@ After=network.target
 [Service]
 PIDFile=/tmp/NCGR.pid
 User=gunicorn
-Group=gunicorn
+Group=ncgr-team
 WorkingDirectory=/usr/share/nginx/html/
 ExecStart=/usr/share/nginx/html/venv/bin/gunicorn -c gunicorn.py mysite.wsgi
 ExecReload=/bin/kill -s HUP $MAINPID
