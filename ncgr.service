@@ -1,0 +1,21 @@
+[Unit]
+Description=NCGR Gunicorn Daemon
+After=network.target
+
+[Service]
+PIDFile=/tmp/NCGR.pid
+User=gunicorn
+Group=gunicorn
+WorkingDirectory=/usr/share/nginx/html/
+ExecStart=/usr/share/nginx/html/venv/bin/gunicorn -c gunicorn.py mysite.wsgi
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+ExecStopPost = /bin/rm -rf /run/gunicorn/*
+PrivateTmp=true
+Restart=always
+RestartSec=30
+StartLimitInterval=400
+StartLimitBurst=3
+
+[Install]
+WantedBy=multi-user.target
