@@ -5,3 +5,6 @@ psycopg2-binary
 
 # Production
 gunicorn
+
+# Math Stuff
+django-mathfilters

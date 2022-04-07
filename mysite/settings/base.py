@@ -30,7 +30,6 @@ INSTALLED_APPS = [
     "studies",
     "study_variants",
     "variant_details",
-    "advanced_filters",
     "mathfilters",
     "wagtail.contrib.routable_page",
     "wagtail.contrib.forms",
@@ -103,11 +102,11 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "NESHIE-db",
-        "USER": "postgres",
+        "NAME": "ncgr_db",
+        "USER": "",
         "HOST": "localhost",
         "PORT": 5432,
-        "PASSWORD": "Waterlemon17*",
+        "PASSWORD": "",
     }
 }
 
