@@ -8,20 +8,12 @@ from .models import Studies
 class StudiesAdmin(ModelAdmin):
     model = Studies
     menu_label = "Studies"
-    menu_icon = "placeholder"
+    menu_icon = "edit"
     menu_order = 500
     add_to_settings_menu = False
     exclude_from_explorer = False
-    list_display = (
-        "papers",
-        "doi",
-        "study_population_description"
-    )
-    search_fields = (
-        "papers",
-        "doi",
-        "study_population_description"
-    )
+    list_display = ("papers", "doi", "study_population_description")
+    search_fields = ("papers", "doi", "study_population_description")
 
 
 modeladmin_register(StudiesAdmin)

@@ -2,7 +2,8 @@ from django.db import models
 from gene_details.models import GeneDetails
 from study_variants.models import StudyVariants
 from variant_details.models import VariantDetails
-from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel
+from wagtail.admin.edit_handlers import (FieldPanel, InlinePanel,
+                                         MultiFieldPanel)
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
@@ -39,6 +40,13 @@ class Studies(Page):
         ),
         MultiFieldPanel([InlinePanel("study_variants")], heading="Study variants"),
     ]
+
+    def __str__(self):
+        return self.papers
+
+    class Meta:
+        verbose_name = "Study"
+        verbose_name_plural = "Studies"
 
 
 class StudiesIndexPage(RoutablePageMixin, Page):

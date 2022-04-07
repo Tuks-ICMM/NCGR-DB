@@ -7,7 +7,7 @@ from .models import StudyVariants
 class StudyVariantsAdmin(ModelAdmin):
     model = StudyVariants
     menu_label = "Study Variants"
-    menu_icon = "placeholder"
+    menu_icon = "edit"
     menu_order = 600
     add_to_settings_menu = False
     exclude_from_explorer = False

@@ -14,8 +14,8 @@
         <p><strong>Reference genome:</strong> {{ variant.reference_genome }}</p>
         <p><strong>Transcript ID:</strong> {{ variant.transcript_id }}</p>
         <p><strong>Chromosome:</strong> {{ variant.chromosome }}</p>
-        <p><strong>Genomic start position:</strong> {{ variant.genomic_start_position }}</p>
-        <p><strong>Genomic end position:</strong> {{ variant.genomic_end_position }}</p>
+        <p><strong>Genomic start position:</strong> {{ variant.genomic_start_position|floatformat }}</p>
+        <p><strong>Genomic end position:</strong> {{ variant.genomic_end_position|floatformat }}</p>
         <p><strong>Reference allele:</strong> {{ variant.reference_allele }}</p>
         <p><strong>Alternate allele:</strong> {{ variant.alternate_allele }}</p>
         <p><strong>Disease association with reference allele:</strong> {{ variant.disease_association_with_ref_allele }}

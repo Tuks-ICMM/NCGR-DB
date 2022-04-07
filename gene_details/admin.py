@@ -1,12 +1,13 @@
-from .models import GeneDetails, GeneHpo
 from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
+
+from .models import GeneDetails, GeneHpo
 
 
 class GeneDetailsAdmin(ModelAdmin):
     model = GeneDetails
     menu_label = "Gene Details"
-    menu_icon = "placeholder"
-    menu_order = 800
+    menu_icon = "edit"
+    menu_order = 1000
     add_to_settings_menu = False
     exclude_from_explorer = False
     list_display = (
@@ -24,9 +25,9 @@ modeladmin_register(GeneDetailsAdmin)
 
 class GeneHpoAdmin(ModelAdmin):
     model = GeneHpo
-    menu_label = "Gene Hpo"
-    menu_icon = "placeholder"
-    menu_order = 900
+    menu_label = "Gene HPO"
+    menu_icon = "edit"
+    menu_order = 1100
     add_to_settings_menu = False
     exclude_from_explorer = False
     list_display = (

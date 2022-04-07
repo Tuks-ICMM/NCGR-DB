@@ -49,9 +49,6 @@ class VariantDetails(Page):
         blank=True,
     )  # Field name made lowercase.
 
-    def __str__(self):
-        return self.variant_name
-
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
@@ -87,6 +84,13 @@ class VariantDetails(Page):
             heading="MutationTaster VEP",
         ),
     ]
+
+    def __str__(self):
+        return self.variant_name
+
+    class Meta:
+        verbose_name = "Variant"
+        verbose_name_plural = "Variants"
 
 
 class EnsemblVep(models.Model):
@@ -196,6 +200,13 @@ class EnsemblVep(models.Model):
         FieldPanel("cadd_phred"),
     ]
 
+    def __str__(self):
+        return self.ensembl_canonical_hgvsc
+
+    class Meta:
+        verbose_name = "Variant effect predictions"
+        verbose_name_plural = "Variant effect predictions"
+
 
 class MtVep(models.Model):
 
@@ -223,6 +234,13 @@ class MtVep(models.Model):
         FieldPanel("query_prediction"),
         FieldPanel("query_model"),
     ]
+
+    def __str__(self):
+        return self.variant
+
+    class Meta:
+        verbose_name = "Variant effect predictions"
+        verbose_name_plural = "Variant effect predictions"
 
 
 class VariantDetailsIndexPage(RoutablePageMixin, Page):

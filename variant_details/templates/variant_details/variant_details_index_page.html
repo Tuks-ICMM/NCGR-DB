@@ -31,13 +31,13 @@
                 <tr class="cursor-pointer clickable"
                     onclick="location.href='{% routablepageurl page "selected_variant" slug=variant.slug %}'"
                     title="View variant effect predictions">
-                    <td><a href="{% routablepageurl page "selected_variant" slug=variant.slug %}"
+                    <td><a href="{% routablepageurl page 'selected_variant' slug=variant.slug %}"
                             title="View variant effect predictions">{{ variant.variant_name }}</a></td>
                     <td>{{ variant.reference_genome }}</td>
                     <td>{{ variant.transcript_id }}</td>
                     <td>{{ variant.chromosome }}</td>
-                    <td>{{ variant.genomic_start_position }}</td>
-                    <td>{{ variant.genomic_end_position }}</td>
+                    <td>{{ variant.genomic_start_position|floatformat }}</td>
+                    <td>{{ variant.genomic_end_position|floatformat }}</td>
                     <td>{{ variant.reference_allele }}</td>
                     <td>{{ variant.alternate_allele }}</td>
                     <td>{{ variant.variant_type }}</td>

@@ -49,6 +49,13 @@ class GeneDetails(Page):
         ),
     ]
 
+    def __str__(self):
+        return self.gene
+
+    class Meta:
+        verbose_name = "Gene"
+        verbose_name_plural = "Genes"
+
 
 class GeneHpo(models.Model):
 
@@ -86,6 +93,13 @@ class GeneHpo(models.Model):
     def all_hpo(self):
         """Returns all hpo terms except where null"""
         return GeneHpo.objects.exclude(name__isnull=True)
+
+    def __str__(self):
+        return self.inputterm
+
+    class Meta:
+        verbose_name = "Gene HPO"
+        verbose_name_plural = "Gene HPO"
 
 
 class GeneDetailsIndexPage(RoutablePageMixin, Page):
