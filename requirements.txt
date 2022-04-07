@@ -62,6 +62,10 @@ django-filter==21.1 \
     --hash=sha256:632a251fa8f1aadb4b8cceff932bb52fe2f826dd7dfe7f3eac40e5c463d6836e \
     --hash=sha256:f4a6737a30104c98d2e2a5fb93043f36dd7978e0c7ddc92f5998e85433ea5063
     # via wagtail
+django-mathfilters==1.0.0 \
+    --hash=sha256:64200a21bb249fbf27be601d4bbb788779e09c6e063170c097cd82c4d18ebb83 \
+    --hash=sha256:c9b892ef6dfc893683e75cfd0279c187a601ca68f4684c38f9da44657fb64b07
+    # via -r requirements.in
 django-modelcluster==5.3 \
     --hash=sha256:0347cdcacb19a1078ee56cc3e6d5413ba27b8a5900710c53bb92b5d8ff3819cd \
     --hash=sha256:f9f4250e706ee5e57503a30fbf37058b73e9fdc3190d75031338b81913cc9b4e
@@ -221,9 +225,9 @@ six==1.16.0 \
     # via
     #   html5lib
     #   l18n
-soupsieve==2.3.1 \
-    --hash=sha256:1a3cca2617c6b38c0343ed661b1fa5de5637f257d4fe22bd9f1338010a1efefb \
-    --hash=sha256:b8d49b1cd4f037c7082a9683dfa1801aa2597fb11c3a1155b7a5b94829b4f1f9
+soupsieve==2.3.2 \
+    --hash=sha256:0bcc6d7432153063e3df09c3ac9442af3eba488715bfcad6a4c38ccb2a523124 \
+    --hash=sha256:a714129d3021ec17ce5be346b1007300558b378332c289a1a20e7d4de6ff18a5
     # via beautifulsoup4
 sqlparse==0.4.2 \
     --hash=sha256:0c00730c74263a94e5a9919ade150dfc3b19c574389985446148402998287dae \
