@@ -6,6 +6,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
 from django.template.response import TemplateResponse
 from gene_details.models import GeneHpo
+from numpy import full
 from study_variants.models import StudyVariants
 from variant_details.models import VariantDetails
 from wagtail.core.models import Page
@@ -76,12 +77,17 @@ def filter_type_to_q(rule: str) -> Q:
                 return operator_check(rule["operator"], filter_string_base, "HIE")
             elif rule["value"] == "NESHIE-caused CP":
                 full_query = Q()
-                for key, value in {
-                    "study_variants__condition_description": "HIE",
-                    "study_variants__condition_description": "Asphyxia",
-                    "study_variants__condition_description": "Neonatal encephalopathy",
-                }.items():
-                    full_query.add(operator_check(rule["operator"], key, value), Q.OR)
+                condition_tup = [
+                    ("study_variants__condition_description", "HIE"),
+                    ("study_variants__condition_description", "Asphyxia"),
+                    (
+                        "study_variants__condition_description",
+                        "Neonatal encephalopathy",
+                    ),
+                ]
+                for key, value in condition_tup:
+                    q_object = operator_check(rule["operator"], key, value)
+                    full_query.add(q_object, Q.OR)
                 return full_query
         elif rule["field"] == "Gene HPO":  # <Text> element
             filter_string_base = "gene__gene_hpo__name"
@@ -92,24 +98,28 @@ def filter_type_to_q(rule: str) -> Q:
         elif rule["field"] == "Predicted variant effect":  # <Radio> element
             if rule["value"] == "Pathogenic":
                 full_query = Q()
-                for key, value in {
-                    "ensembl_vep__polyphen2_hvar_pred": "P",
-                    "ensembl_vep__sift_prediction": "pathogenic",
-                    "ensembl_vep__sift4g_pred": "P",
-                    "ensembl_vep__fathmm_pred": "P",
-                }.items():
-                    full_query.add(operator_check(rule["operator"], key, value), Q.OR)
+                path_effect_tup = [
+                    ("ensembl_vep__polyphen2_hvar_pred", "P"),
+                    ("ensembl_vep__sift_prediction", "pathogenic"),
+                    ("ensembl_vep__sift4g_pred", "P"),
+                    ("ensembl_vep__fathmm_pred", "P"),
+                ]
+                for key, value in path_effect_tup:
+                    q_object = operator_check(rule["operator"], key, value)
+                    full_query.add(q_object, Q.OR)
                 return full_query
             elif rule["value"] == "Deleterious":
                 full_query = Q()
-                for key, value in {
-                    "mt_vep__query_prediction": "disease causing",
-                    "ensembl_vep__polyphen2_hvar_pred": "D",
-                    "ensembl_vep__sift_prediction": "deleterious",
-                    "ensembl_vep__sift4g_pred": "D",
-                    "ensembl_vep__fathmm_pred": "D",
-                }.items():
-                    full_query.add(operator_check(rule["operator"], key, value), Q.OR)
+                del_effect_tup = [
+                    ("mt_vep__query_prediction", "disease causing"),
+                    ("ensembl_vep__polyphen2_hvar_pred", "D"),
+                    ("ensembl_vep__sift_prediction", "deleterious"),
+                    ("ensembl_vep__sift4g_pred", "D"),
+                    ("ensembl_vep__fathmm_pred", "D"),
+                ]
+                for key, value in del_effect_tup:
+                    q_object = operator_check(rule["operator"], key, value)
+                    full_query.add(q_object, Q.OR)
                 return full_query
 
 
