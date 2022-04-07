@@ -1,10 +1,7 @@
-from django import forms
 import sys
 
-sys.path.append(
-    "C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/neshiedbv7_links_working/mysite/study_variants"
-)
 import study_variants.models
+from django import forms
 
 
 class filter_form(forms.ModelForm):

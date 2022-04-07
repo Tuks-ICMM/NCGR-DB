@@ -1,6 +1,8 @@
 import sys
 
 import django_filters
+import gene_details.models
+import study_variants.models
 from django.db import models
 from studies.models import StudiesIndexPage
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
@@ -9,16 +11,6 @@ from wagtail.core.models import Page
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 from home import blocks
-
-sys.path.append(
-    "C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/neshiedbv7_links_working/mysite/gene_details"
-)
-import gene_details.models
-
-sys.path.append(
-    "C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/neshiedbv7_links_working/mysite/study_variants"
-)
-import study_variants.models
 
 
 class HomePage(Page):

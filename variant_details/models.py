@@ -8,9 +8,6 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
 
-sys.path.append("C:/Users/Lance/Desktop/Megan/MSc_2/Online_db/NESHIE-DB/gene_details")
-import gene_details.models
-
 
 # Create your models here.
 class VariantDetails(Page):
@@ -42,7 +39,7 @@ class VariantDetails(Page):
     )  # Field name made lowercase.
     variant_type = models.TextField(blank=True, null=True)  # Field name made lowercase.
     gene = ParentalKey(
-        gene_details.models.GeneDetails,
+        "gene_details.GeneDetails",
         on_delete=models.SET_NULL,
         related_name="variant_details",
         null=True,
