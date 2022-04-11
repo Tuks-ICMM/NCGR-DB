@@ -12,8 +12,8 @@
 
 
 <form method="get" class="p-5">
-    <h1>Customised filter</h1>
-    <p>Filter results by custom parameters</p>
+    <h1>Search and filter</h1>
+    <p>Search and filter results by custom parameters</p>
     <div id="builder"></div>
     <input id='complex_filter_query' type='text' class='d-none' name='complex_filter_query'
         value='{{complex_filter_query}}' />
@@ -60,8 +60,20 @@
                     <td>{{ result.variant.gene.rvis_score }}</td>
                     <td><a href="{% pageurl result.variant %}" title="View variant information">{{result.variant}}</a>
                     </td>
+                    {% if result.variant.reference_allele %}
                     <td>{{ result.variant.reference_allele }}</td>
+                    {% elif result.variant.reference_allele == "None" %}
+                    <td title="Study did not provide genomic reference allele">None</td>
+                    {% else %}
+                    <td title="Study did not provide genomic reference allele">None</td>
+                    {% endif %}
+                    {% if result.variant.alternate_allele %}
                     <td>{{ result.variant.alternate_allele }}</td>
+                    {% elif result.variant.alternate_allele == "None" %}
+                    <td title="Study did not provide genomic alternate allele">None</td>
+                    {% else %}
+                    <td title="Study did not provide genomic alternate allele">None</td>
+                    {% endif %}
                     <td>{{ result.variant.variant_type }}</td>
                     {% if result.p_value < 0 %}
                     <td title="Study did not give exact p-value">&lt;{{result.p_value|abs}}</td>
@@ -93,6 +105,38 @@
         allow_empty: true,
         select_placeholder: "Select parameter",
         filters: [{
+            id: 'Study DOI',
+            label: 'Study DOI',
+            type: 'string',
+            input: 'text',
+            operators: ['equal', 'not_equal'],
+            placeholder: 'Enter a valid study DOI here',
+            size: 40
+        }, {
+            id: 'Study first author',
+            label: 'Study first author',
+            type: 'string',
+            input: 'text',
+            operators: ['equal', 'not_equal'],
+            placeholder: 'Enter a valid study first author surname here',
+            size: 40
+        }, {
+            id: 'Gene symbol',
+            label: 'Gene symbol',
+            type: 'string',
+            input: 'text',
+            operators: ['equal', 'not_equal'],
+            placeholder: 'Enter a valid gene symbol here',
+            size: 40
+        }, {
+            id: 'Variant identifier',
+            label: 'Variant identifier',
+            type: 'string',
+            input: 'text',
+            operators: ['equal', 'not_equal'],
+            placeholder: 'Enter a valid variant identifier here',
+            size: 40
+        }, {
             id: 'Condition',
             label: 'Condition',
             type: 'string',

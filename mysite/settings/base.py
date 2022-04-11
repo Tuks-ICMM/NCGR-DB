@@ -102,11 +102,11 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "ncgr_db",
-        "USER": "",
+        "NAME": "NESHIE-db",
+        "USER": "postgres",
         "HOST": "localhost",
         "PORT": 5432,
-        "PASSWORD": "",
+        "PASSWORD": "Waterlemon17*",
     }
 }
 
