@@ -36,10 +36,34 @@
                     <td>{{ variant.reference_genome }}</td>
                     <td>{{ variant.transcript_id }}</td>
                     <td>{{ variant.chromosome }}</td>
+                    {% if variant.genomic_start_position %}
                     <td>{{ variant.genomic_start_position|floatformat }}</td>
+                    {% elif variant.genomic_start_position == "None" %}
+                    <td title="Study did not provide genomic start position">None</td>
+                    {% else %}
+                    <td title="Study did not provide genomic start position">None</td>
+                    {% endif %}
+                    {% if variant.genomic_end_position %}
                     <td>{{ variant.genomic_end_position|floatformat }}</td>
+                    {% elif variant.genomic_end_position == "None" %}
+                    <td title="Study did not provide genomic end position">None</td>
+                    {% else %}
+                    <td title="Study did not provide genomic end position">None</td>
+                    {% endif %}
+                    {% if variant.reference_allele %}
                     <td>{{ variant.reference_allele }}</td>
+                    {% elif variant.reference_allele == "None" %}
+                    <td title="Study did not provide genomic reference allele">None</td>
+                    {% else %}
+                    <td title="Study did not provide genomic reference allele">None</td>
+                    {% endif %}
+                    {% if variant.alternate_allele %}
                     <td>{{ variant.alternate_allele }}</td>
+                    {% elif variant.alternate_allele == "None" %}
+                    <td title="Study did not provide genomic alternate allele">None</td>
+                    {% else %}
+                    <td title="Study did not provide genomic alternate allele">None</td>
+                    {% endif %}
                     <td>{{ variant.variant_type }}</td>
                     <td><a href="{% routablepageurl page "selected_gene" gene=variant.gene.gene %}"
                             title="View gene details">{{ variant.gene }}</a></td>
