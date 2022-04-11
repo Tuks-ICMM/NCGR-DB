@@ -45,37 +45,37 @@
             </thead>
             <tbody>
                 {% for result in search_results.distinct %}
-                {% for variant in result.study_variants.distinct%}
-                <tr class="cursor-pointer clickable" onclick="location.href='{% pageurl result %}'"
-                    title="View variant effect predictions">
-                    {% if variant.paper %}
-                    <td><a href="{% slugurl variant.paper.slug %}" title="View study information">{{variant.paper}}</a>
+                <tr>
+                    {% if result.paper %}
+                    <td><a href="{% slugurl result.paper.slug %}" title="View study information">{{result.paper}}</a>
                     </td>
                     {% else %}
                     <td>None</td>
                     {% endif %}
-                    <td>{{variant.condition}}</td>
-                    <td>{{variant.condition_description}}</td>
-                    <td><a href="{% pageurl result.gene %}" title="View gene information">{{ result.gene }}</a></td>
-                    <td>{{ result.gene.rvis_score }}</td>
-                    <td><a href="{% pageurl result %}" title="View variant information">{{result.variant_name}}</a></td>
-                    <td>{{ result.reference_allele }}</td>
-                    <td>{{ result.alternate_allele }}</td>
-                    <td>{{ result.variant_type }}</td>
-                    {% if variant.p_value < 0 %}
-                    <td title="Study did not give exact p-value">&lt;{{variant.p_value|abs}}</td>
-                    {% elif variant.p_value > 0 %}
-                    <td>{{variant.p_value}}</td>
+                    <td>{{result.condition}}</td>
+                    <td>{{result.condition_description}}</td>
+                    <td><a href="{% pageurl result.variant.gene %}"
+                            title="View gene information">{{ result.variant.gene }}</a>
+                    </td>
+                    <td>{{ result.variant.gene.rvis_score }}</td>
+                    <td><a href="{% pageurl result.variant %}" title="View variant information">{{result.variant}}</a>
+                    </td>
+                    <td>{{ result.variant.reference_allele }}</td>
+                    <td>{{ result.variant.alternate_allele }}</td>
+                    <td>{{ result.variant.variant_type }}</td>
+                    {% if result.p_value < 0 %}
+                    <td title="Study did not give exact p-value">&lt;{{result.p_value|abs}}</td>
+                    {% elif result.p_value > 0 %}
+                    <td>{{result.p_value}}</td>
                     {% else %}
                     <td>None</td>
                     {% endif %}
-                    {% if variant.odds_ratio %}
-                    <td>{{variant.odds_ratio}}</td>
+                    {% if result.odds_ratio %}
+                    <td>{{result.odds_ratio}}</td>
                     {% else %}
                     <td>None</td>
                     {% endif %}
                 </tr>
-                {% endfor %}
                 {% endfor %}
             </tbody>
         </table>

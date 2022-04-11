@@ -5,12 +5,8 @@ from decimal import Decimal
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
 from django.template.response import TemplateResponse
-from gene_details.models import GeneHpo
 from numpy import full
 from study_variants.models import StudyVariants
-from variant_details.models import VariantDetails
-from wagtail.core.models import Page
-from wagtail.search.models import Query
 
 
 def operator_check(operator: str, filter_base: str, search_value: str) -> Q:
@@ -56,32 +52,32 @@ def filter_type_to_q(rule: str) -> Q:
     """
     if rule["type"] == "integer":
         if rule["field"] == "RVIS":  # <Select> element
-            filter_string_base = "gene__rvis_score"
+            filter_string_base = "variant__gene__rvis_score"
             return operator_check(rule["operator"], filter_string_base, 0)
         elif rule["field"] == "Odds ratio":  # <Select> element
-            filter_string_base = "study_variants__odds_ratio"
+            filter_string_base = "odds_ratio"
             return operator_check(rule["operator"], filter_string_base, rule["value"])
     elif rule["type"] == "double":
         if rule["field"] == "P-value":  # <Select> element
-            filter_string_base = "study_variants__p_value"
+            filter_string_base = "p_value"
             return operator_check(rule["operator"], filter_string_base, rule["value"])
     elif rule["type"] == "string":
         if rule["field"] == "Condition":  # <Radio> element
             if rule["value"] == "CP":
-                filter_string_base = "study_variants__condition"
+                filter_string_base = "condition"
                 return operator_check(
                     rule["operator"], filter_string_base, rule["value"]
                 )
             elif rule["value"] == "NESHIE":
-                filter_string_base = "study_variants__condition"
+                filter_string_base = "condition"
                 return operator_check(rule["operator"], filter_string_base, "HIE")
             elif rule["value"] == "NESHIE-caused CP":
                 full_query = Q()
                 condition_tup = [
-                    ("study_variants__condition_description", "HIE"),
-                    ("study_variants__condition_description", "Asphyxia"),
+                    ("condition_description", "HIE"),
+                    ("condition_description", "Asphyxia"),
                     (
-                        "study_variants__condition_description",
+                        "condition_description",
                         "Neonatal encephalopathy",
                     ),
                 ]
@@ -90,19 +86,19 @@ def filter_type_to_q(rule: str) -> Q:
                     full_query.add(q_object, Q.OR)
                 return full_query
         elif rule["field"] == "Gene HPO":  # <Text> element
-            filter_string_base = "gene__gene_hpo__name"
+            filter_string_base = "variant__gene__gene_hpo__name"
             return operator_check(rule["operator"], filter_string_base, rule["value"])
         elif rule["field"] == "Variant consequences":  # <Select> element
-            filter_string_base = "ensembl_vep__consequence_terms"
+            filter_string_base = "variant__ensembl_vep__consequence_terms"
             return operator_check(rule["operator"], filter_string_base, rule["value"])
         elif rule["field"] == "Predicted variant effect":  # <Radio> element
             if rule["value"] == "Pathogenic":
                 full_query = Q()
                 path_effect_tup = [
-                    ("ensembl_vep__polyphen2_hvar_pred", "P"),
-                    ("ensembl_vep__sift_prediction", "pathogenic"),
-                    ("ensembl_vep__sift4g_pred", "P"),
-                    ("ensembl_vep__fathmm_pred", "P"),
+                    ("variant__ensembl_vep__polyphen2_hvar_pred", "P"),
+                    ("variant__ensembl_vep__sift_prediction", "pathogenic"),
+                    ("variant__ensembl_vep__sift4g_pred", "P"),
+                    ("variant__ensembl_vep__fathmm_pred", "P"),
                 ]
                 for key, value in path_effect_tup:
                     q_object = operator_check(rule["operator"], key, value)
@@ -111,11 +107,11 @@ def filter_type_to_q(rule: str) -> Q:
             elif rule["value"] == "Deleterious":
                 full_query = Q()
                 del_effect_tup = [
-                    ("mt_vep__query_prediction", "disease causing"),
-                    ("ensembl_vep__polyphen2_hvar_pred", "D"),
-                    ("ensembl_vep__sift_prediction", "deleterious"),
-                    ("ensembl_vep__sift4g_pred", "D"),
-                    ("ensembl_vep__fathmm_pred", "D"),
+                    ("variant__mt_vep__query_prediction", "disease causing"),
+                    ("variant__ensembl_vep__polyphen2_hvar_pred", "D"),
+                    ("variant__ensembl_vep__sift_prediction", "deleterious"),
+                    ("variant__ensembl_vep__sift4g_pred", "D"),
+                    ("variant__ensembl_vep__fathmm_pred", "D"),
                 ]
                 for key, value in del_effect_tup:
                     q_object = operator_check(rule["operator"], key, value)
@@ -174,7 +170,7 @@ def search(request):
 
     search_query = request.GET.get("query", None)
 
-    search_results = VariantDetails.objects.live()
+    search_results = StudyVariants.objects.all()
 
     # Search
     if complex_filter_query is not None and "condition" in complex_filter_query:
