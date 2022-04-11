@@ -88,6 +88,18 @@ def filter_type_to_q(rule: str) -> Q:
         elif rule["field"] == "Gene HPO":  # <Text> element
             filter_string_base = "variant__gene__gene_hpo__name"
             return operator_check(rule["operator"], filter_string_base, rule["value"])
+        elif rule["field"] == "Study DOI":  # <Text> element
+            filter_string_base = "paper__doi"
+            return operator_check(rule["operator"], filter_string_base, rule["value"])
+        elif rule["field"] == "Gene symbol":  # <Text> element
+            filter_string_base = "variant__gene__gene"
+            return operator_check(rule["operator"], filter_string_base, rule["value"])
+        elif rule["field"] == "Variant identifier":  # <Text> element
+            filter_string_base = "variant__variant_name"
+            return operator_check(rule["operator"], filter_string_base, rule["value"])
+        elif rule["field"] == "Study first author":  # <Text> element
+            filter_string_base = "paper__papers"
+            return operator_check(rule["operator"], filter_string_base, rule["value"])
         elif rule["field"] == "Variant consequences":  # <Select> element
             filter_string_base = "variant__ensembl_vep__consequence_terms"
             return operator_check(rule["operator"], filter_string_base, rule["value"])
