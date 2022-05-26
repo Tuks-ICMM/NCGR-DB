@@ -1,5 +1,5 @@
 Django
-wagtail
+wagtail<3.0.0
 django-extensions 
 psycopg2-binary
 
