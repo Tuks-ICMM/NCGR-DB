@@ -74,12 +74,12 @@ def filter_type_to_q(rule: str) -> Q:
                 )
             elif rule["value"] == "NESHIE":
                 filter_string_base = "study_variants__condition"
-                return operator_check(rule["operator"], filter_string_base, "HIE")
+                return operator_check(rule["operator"], filter_string_base, "NESHIE")
             elif rule["value"] == "NESHIE-caused CP":
                 full_query = Q()
                 condition_tup = [
-                    ("study_variants__condition_description", "HIE"),
-                    ("study_variants__condition_description", "Asphyxia"),
+                    ("study_variants__condition_description", "NESHIE"),
+                    ("study_variants__condition_description", "Birth asphyxia"),
                     (
                         "study_variants__condition_description",
                         "Neonatal encephalopathy",
