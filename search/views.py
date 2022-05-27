@@ -76,7 +76,6 @@ def filter_type_to_q(rule: str) -> Q:
                 condition_tup = [
                     ("condition_description", "NESHIE"),
                     ("condition_description", "Birth asphyxia"),
-                    ("condition_description", "Neonatal encephalopathy",),
                 ]
                 for key, value in condition_tup:
                     q_object = operator_check(rule["operator"], key, value)
