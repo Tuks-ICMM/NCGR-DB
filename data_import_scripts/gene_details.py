@@ -1,19 +1,19 @@
 import pandas as pd
 
-f = pd.read_excel(
-    "/usr/share/nginx/html/data_files/gene_details.xlsx"
-)
+f = pd.read_excel("/usr/share/nginx/html/data_files/gene_details.xlsx")
 parent_page = GeneDetailsIndexPage.objects.get(title="Gene details")
 
 f = f.astype(object).where(f.notnull(), None)
 # f["RVIS_score"] = pd.to_numeric(f["RVIS_score"])
 # f["RVIS_percentage"] = pd.to_numeric(f["RVIS_percentage"])
 
+# Incorrectly imports NULL values as floats not decimals - cannot cast straight from floats to decimals - first convert to string
 f["RVIS_percentage"] = f["RVIS_percentage"].apply(
     lambda x: str(x) if not None else None
 )
 f["RVIS_score"] = f["RVIS_score"].apply(lambda x: str(x) if not None else None)
 
+# Converts strings to None objects
 f["RVIS_percentage"] = f["RVIS_percentage"].apply(lambda x: None if x == "None" else x)
 f["RVIS_score"] = f["RVIS_score"].apply(lambda x: None if x == "None" else x)
 

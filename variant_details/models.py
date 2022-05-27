@@ -62,24 +62,9 @@ class VariantDetails(Page):
             ],
             heading="Variant details",
         ),
-        MultiFieldPanel(
-            [
-                FieldPanel("gene"),
-            ],
-            heading="Gene",
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel("ensembl_vep"),
-            ],
-            heading="Ensembl VEP",
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel("mt_vep"),
-            ],
-            heading="MutationTaster VEP",
-        ),
+        MultiFieldPanel([FieldPanel("gene"),], heading="Gene",),
+        MultiFieldPanel([InlinePanel("ensembl_vep"),], heading="Ensembl VEP",),
+        MultiFieldPanel([InlinePanel("mt_vep"),], heading="MutationTaster VEP",),
     ]
 
     def __str__(self):
@@ -106,25 +91,20 @@ class EnsemblVep(models.Model):
         blank=True, null=True
     )  # Field name made lowercase.
     af_1000gp3_eur = models.TextField(
-        blank=True,
-        null=True,
+        blank=True, null=True,
     )  # Field name made lowercase.
     af_1000gp3 = models.TextField(blank=True, null=True)  # Field name made lowercase.
     af_1000gp3_afr = models.TextField(
-        blank=True,
-        null=True,
+        blank=True, null=True,
     )  # Field name made lowercase.
     af_1000gp3_amr = models.TextField(
-        blank=True,
-        null=True,
+        blank=True, null=True,
     )  # Field name made lowercase.
     af_1000gp3_sas = models.TextField(
-        blank=True,
-        null=True,
+        blank=True, null=True,
     )  # Field name made lowercase.
     af_1000gp3_eas = models.TextField(
-        blank=True,
-        null=True,
+        blank=True, null=True,
     )  # Field name made lowercase.
     exac_adj_af = models.TextField(blank=True, null=True)  # Field name made lowercase.
     exac_afr_af = models.TextField(blank=True, null=True)  # Field name made lowercase.
@@ -133,16 +113,13 @@ class EnsemblVep(models.Model):
     exac_nfe_af = models.TextField(blank=True, null=True)  # Field name made lowercase.
     exac_sas_af = models.TextField(blank=True, null=True)  # Field name made lowercase.
     gnomad_genomes_af = models.TextField(
-        blank=True,
-        null=True,
+        blank=True, null=True,
     )  # Field name made lowercase.
     gnomad_genomes_afr_af = models.TextField(
-        blank=True,
-        null=True,
+        blank=True, null=True,
     )  # Field name made lowercase.
     gnomad_genomes_eas_af = models.TextField(
-        blank=True,
-        null=True,
+        blank=True, null=True,
     )  # Field name made lowercase.
     study_acmg = models.TextField(blank=True, null=True)  # Field name made lowercase.
     polyphen2_hvar_score = models.TextField(
@@ -161,9 +138,6 @@ class EnsemblVep(models.Model):
     )  # Field name made lowercase.
     cadd_raw = models.TextField(blank=True, null=True)  # Field name made lowercase.
     cadd_phred = models.TextField(blank=True, null=True)  # Field name made lowercase.
-
-    def __str__(self):
-        return self.variant
 
     panels = [
         FieldPanel("variant"),
@@ -197,9 +171,6 @@ class EnsemblVep(models.Model):
         FieldPanel("cadd_phred"),
     ]
 
-    def __str__(self):
-        return self.ensembl_canonical_hgvsc
-
     class Meta:
         verbose_name = "Variant effect predictions"
         verbose_name_plural = "Variant effect predictions"
@@ -222,18 +193,12 @@ class MtVep(models.Model):
     )  # Field name made lowercase.
     query_model = models.TextField(blank=True, null=True)  # Field name made lowercase.
 
-    def __str__(self):
-        return self.variant
-
     panels = [
         FieldPanel("variant"),
         FieldPanel("query_ncbi_geneid"),
         FieldPanel("query_prediction"),
         FieldPanel("query_model"),
     ]
-
-    def __str__(self):
-        return self.variant
 
     class Meta:
         verbose_name = "Variant effect predictions"
