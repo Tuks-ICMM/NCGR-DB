@@ -32,10 +32,14 @@
                 <tr>
                     <th data-sortable="true" scope="col">Study</th>
                     <th data-sortable="true" scope="col">Condition</th>
-                    <th data-sortable="true" scope="col">Condition description</th>
+                    <th data-sortable="true" scope="col"
+                        title="Description of associated condition subtypes and/or clinical manifestations">Condition
+                        description</th>
                     <th data-sortable="true" scope="col">Gene</th>
-                    <th data-sortable="true" scope="col">RVIS score</th>
-                    <th data-sortable="true" scope="col">Variant identifier (dbSNP or HGVS)</th>
+                    <th data-sortable="true" scope="col" title="Residual Variation Intolerance Score">RVIS</th>
+                    <th data-sortable="true" scope="col"
+                        title="Single Nucleotide Polymorphism Database or Human Genome Variation Society identifier">
+                        Variant identifier (dbSNP or HGVS)</th>
                     <th data-sortable="true" scope="col">Reference allele</th>
                     <th data-sortable="true" scope="col">Alternate allele</th>
                     <th data-sortable="true" scope="col">Variant type</th>
@@ -53,7 +57,18 @@
                     <td>None</td>
                     {% endif %}
                     <td>{{result.condition}}</td>
+                    {% if result.condition_description is "None" %}
+                    <td title="No condition subtype or clinical manifestation associated with findings">
+                        {{result.condition_description}}</td>
+                    {% elif result.condition_description is None %}
+                    <td title="No condition subtype or clinical manifestation associated with findings">
+                        {{result.condition_description}}</td>
+                    {% elif result.condition_description == "" %}
+                    <td title="No condition subtype or clinical manifestation associated with findings">
+                        {{result.condition_description}}</td>
+                    {% else %}
                     <td>{{result.condition_description}}</td>
+                    {% endif %}
                     <td><a href="{% pageurl result.variant.gene %}"
                             title="View gene information">{{ result.variant.gene }}</a>
                     </td>

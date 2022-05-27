@@ -12,7 +12,7 @@
         <p><strong>DOI:</strong><a href="https://doi.org/{{study.doi}}" title="View article"> {{ study.doi }}</a></p>
         <p><strong>Study population description:</strong> {{ study.study_population_description }}</p>
         <p><strong>UNICEF regional classification:</strong> {{ study.unicef_regional_classification }}</p>
-        <p><strong>Methods:</strong> {{ study.methods }}</p>
+        <p><strong>Sequencing or genotyping methods:</strong> {{ study.methods }}</p>
     </div>
     <div class="col-12 p-5">
         {% comment %} <input id="custom_search_bar" type="text" class="form-control" type="text"
@@ -23,9 +23,14 @@
             <thead>
                 <tr>
                     <th data-sortable="true" scope="col">Variant</th>
-                    <th data-sortable="true" scope="col">Reported allele or genotype</th>
+                    <th data-sortable="true" scope="col" title="Allele or genotype associated with condition">Reported
+                        allele
+                        or genotype</th>
                     <th data-sortable="true" scope="col">Condition</th>
-                    <th data-sortable="true" scope="col">Condition description</th>
+                    <th data-sortable="true" scope="col"
+                        title="Description of associated condition subtypes and/or clinical manifestations">Condition
+                        description
+                    </th>
                     <th data-sortable="true" scope="col">Disease status</th>
                     <th data-sortable="true" scope="col">Odds ratio</th>
                     <th data-sortable="true" scope="col">P value</th>
@@ -37,12 +42,23 @@
                     <td>{{variant.variant}}</td>
                     <td>{{variant.reported_allele_or_genotype}}</td>
                     <td>{{variant.condition}}</td>
+                    {% if variant.condition_description is "None" %}
+                    <td title="No condition subtype or clinical manifestation associated with findings">
+                        {{variant.condition_description}}</td>
+                    {% elif variant.condition_description is None %}
+                    <td title="No condition subtype or clinical manifestation associated with findings">
+                        {{variant.condition_description}}</td>
+                    {% elif variant.condition_description == "" %}
+                    <td title="No condition subtype or clinical manifestation associated with findings">
+                        {{variant.condition_description}}</td>
+                    {% else %}
                     <td>{{variant.condition_description}}</td>
+                    {% endif %}
                     <td>{{variant.disease_status}}</td>
                     <td>{{variant.odds_ratio}}</td>
                     {% if variant.p_value < 0 %}
                     <td title="Study did not give exact p-value">&lt;{{variant.p_value|abs}}</td>
-                    {% elif variant.p_value > 0 %}
+                    {% else %}
                     <td>{{variant.p_value}}</td>
                     {% endif %}
                 </tr>
