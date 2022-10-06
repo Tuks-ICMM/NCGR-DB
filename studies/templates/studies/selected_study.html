@@ -5,7 +5,8 @@
 {% block content %}
 <div class="row">
     <div class="col-12 text-centre p-5">
-        <h1>Study findings</h1>
+        <h1>Study Findings</h1>
+        <div>{{self.study_findings_intro|richtext}}</div>
     </div>
     <div class="col-12 px-5">
         <p><strong>Paper:</strong> {{ study.papers }}</p>

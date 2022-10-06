@@ -5,6 +5,7 @@
 <div class="row">
     <div class="col-12 text-centre px-5 pt-5 pb-4">
         <h1 class="display-4">{{ page.title }}</h1>
+        <div>{{ self.intro|richtext }}</div>
     </div>
     <div class="col-12 px-5 py-0">
         {% comment %} <input id="custom_search_bar" type="text" class="form-control" type="text"

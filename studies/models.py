@@ -1,9 +1,9 @@
 from django.db import models
+from django.http import JsonResponse
 from gene_details.models import GeneDetails
 from study_variants.models import StudyVariants
 from variant_details.models import VariantDetails
-from wagtail.admin.edit_handlers import (FieldPanel, InlinePanel,
-                                         MultiFieldPanel)
+from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
@@ -57,13 +57,12 @@ class StudiesIndexPage(RoutablePageMixin, Page):
     subpage_types = ["studies.Studies"]
 
     intro = RichTextField(blank=True)
+    study_findings_intro = RichTextField(blank=True)
 
-    content_panels = Page.content_panels + [FieldPanel("intro")]
-
-    # def get_context(self, request, *args, **kwargs):
-    #     context = super().get_context(request, *args, **kwargs)
-    #     context["studies"] = Studies.objects.all()
-    #     return context
+    content_panels = Page.content_panels + [
+        FieldPanel("intro"),
+        FieldPanel("study_findings_intro"),
+    ]
 
     @route(r"^$")
     def studies_index_page(self, request, *args, **kwargs):
@@ -75,7 +74,6 @@ class StudiesIndexPage(RoutablePageMixin, Page):
             template="studies/studies_index_page.html",
         )
 
-    # @route(r"(?P<doi>10.\d{4,9}\/[-._;()\/:a-z0-9A-Z]+\/{0,1})", name="study")
     @route(r"(?P<slug>[0-9a-zA-Z-_]+)[\/]{0,1}")
     def selected_study(self, request, slug, *args, **kwargs):
         """View a specific gene"""

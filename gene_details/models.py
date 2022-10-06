@@ -110,7 +110,12 @@ class GeneDetailsIndexPage(RoutablePageMixin, Page):
 
     intro = RichTextField(blank=True)
 
-    content_panels = Page.content_panels + [FieldPanel("intro")]
+    gene_hpo_intro = RichTextField(blank=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel("intro"),
+        FieldPanel("gene_hpo_intro"),
+    ]
 
     # def get_context(self, request, *args, **kwargs):
     #     context = super().get_context(request, *args, **kwargs)

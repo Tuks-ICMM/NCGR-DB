@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags wagtailroutablepage_tags %}
+{% load alfa_tags %}
 
 {% block content %}
 <div class="row">
     <div class="col-12 text-centre p-5">
-        <h1>Variant effect prediction</h1>
+        <h1>Variant Effect Prediction</h1>
+        <div>{{self.VEP_intro|richtext}}</div>
     </div>
     <div class="col-12 px-5">
         <p><strong>Variant Name:</strong> {{ variant.variant_name }}</p>
@@ -60,6 +62,7 @@
                     <th data-sortable="true" scope="col">gnomAD global allele frequency</th>
                     <th data-srtable="true" scope="col">gnomAD allele frequency AFR</th>
                     <th data-sortable="true" scope="col">gnomAD allele frequency EAS</th>
+                    <th data-sortable="true" scope="col">Live ALPHA allele frequency</th>
                 </tr>
             </thead>
             <tbody>
@@ -77,10 +80,12 @@
                     <td>{{effect.cadd_raw}}</td>
                     <td>{{effect.cadd_phred}}</td>
                     {%endfor%}
+                    <!-- START: Effect -->
                     {% for effect in variant.mt_vep.all%}
                     <td>{{effect.query_prediction}}</td>
                     <td>{{effect.query_model}}</td>
                     {% endfor %}
+                    <!-- END: Effect -->
                     {% for effect in variant.ensembl_vep.all%}
                     <td>{{effect.af_1000gp3}}</td>
                     <td>{{effect.af_1000gp3_eur}}</td>
@@ -97,6 +102,14 @@
                     <td>{{effect.gnomad_genomes_af}}</td>
                     <td>{{effect.gnomad_genomes_afr_af}}</td>
                     <td>{{effect.gnomad_genomes_eas_af}}</td>
+                    <td>
+                        {% if variant.variant_name|startswith:'rs'%}
+                        <a href="{% alfa_link variant.variant_name %}" title="View live ALFA allele frequencies">ALFA
+                            Frequency</a>
+                        {% else %}
+                        <small class="text-muted">No ALFA allele frequency available</small>
+                        {% endif %}
+                    </td>
                     {% endfor %}
                 </tr>
                 <!-- {% for variant in study.study_variants.all %}

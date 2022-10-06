@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags wagtailroutablepage_tags %}
+{% load pub_count %}
 
 {% block content %}
 <div class="row">
     <div class="col-12 text-centre px-5 pt-5 pb-4">
         <h1 class="display-4">{{ page.title }}</h1>
+        <div>{{ self.intro|richtext }}</div>
     </div>
     <div class="col-12 px-5">
         {% comment %} <input id="custom_search_bar" type="text" class="form-control" type="text"
@@ -24,6 +26,7 @@
                     <th data-sortable="true" scope="col">Alternate allele</th>
                     <th data-sortable="true" scope="col">Variant type</th>
                     <th data-sortable="true" scope="col">Gene</th>
+                    <th data-sortable="true" scope="col">Publication Count</th>
                 </tr>
             </thead>
             <tbody>
@@ -67,6 +70,7 @@
                     <td>{{ variant.variant_type }}</td>
                     <td><a href="{% routablepageurl page "selected_gene" gene=variant.gene.gene %}"
                             title="View gene details">{{ variant.gene }}</a></td>
+                    <td>{{ variant|pub_count }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

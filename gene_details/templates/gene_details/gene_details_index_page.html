@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags wagtailroutablepage_tags %}
+{% load gene_pub_count %}
 
 {% block content %}
 <div class="row">
     <div class="col-12 text-centre px-5 pt-5 pb-4">
         <h1 class="display-4">{{ page.title }}</h1>
+        <div>{{ self.intro|richtext }}</div>
     </div>
     <div class="col-12 px-5">
         {% comment %} <input id="custom_search_bar" type="text" class="form-control" type="text"
@@ -21,6 +23,7 @@
                     <th data-sortable="true" scope="col" title="Residual Variation Intolerance Score">RVIS score</th>
                     <th data-sortable="true" scope="col" title="Residual Variation Intolerance Score percentage">RVIS
                         percentage</th>
+                    <th data-sortable="true" scope="col">Publication Count</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,6 +37,7 @@
                     <td>{{ gene.omim }}</td>
                     <td>{{ gene.rvis_score }}</td>
                     <td>{{ gene.rvis_percentage }}</td>
+                    <td>{{ gene|pub_count }}
                 </tr>
                 {% endfor %}
             </tbody>
